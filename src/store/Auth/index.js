@@ -1,8 +1,24 @@
-import { atom, useRecoilState } from "recoil";
+import { atom } from "recoil";
+
+export const signInDefault = {
+  email: "",
+  password: "",
+  role: "user",
+};
 
 export const signInAtom = atom({
   key: "signInAtom",
-  default: {},
+  default: signInDefault,
 });
 
-export const useSignIn = () => useRecoilState(signInAtom);
+export const signUpDefault = {
+  username: "",
+  email: "",
+  password: "",
+  role: "user",
+};
+
+export const signUpAtom = atom({
+  key: "signUpAtom",
+  default: signUpDefault,
+});

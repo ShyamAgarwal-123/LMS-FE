@@ -1,12 +1,9 @@
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useState } from "react";
-import FormComponent from "@/components/form";
-import { signUpFormFields, signInFormFields } from "@/formFields";
-import { useSignIn } from "@/store/Auth";
+import { SignInForm, SignUpForm } from "@/components/form";
 
 function AuthPage() {
   const [activeTab, setActiveTab] = useState("signin");
-  const [signInData, setSignInData] = useSignIn();
   return (
     <div className="min-h-screen w-full flex items-center justify-center">
       <Tabs
@@ -20,15 +17,10 @@ function AuthPage() {
           <TabsTrigger value="signup">Sign Up</TabsTrigger>
         </TabsList>
         <TabsContent value="signin">
-          <FormComponent
-            formFields={signInFormFields}
-            formData={signInData}
-            setFormData={setSignInData}
-            buttonText="SignIn"
-          />
+          <SignInForm />
         </TabsContent>
         <TabsContent value="signup">
-          <FormComponent formFields={signUpFormFields} />
+          <SignUpForm />
         </TabsContent>
       </Tabs>
     </div>
