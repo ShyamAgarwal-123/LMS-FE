@@ -8,10 +8,11 @@ export const useCheckAuthUser = () => {
   async function checkAuthUser() {
     const data = await getUserService();
     console.log(data);
-    if (data.sucess)
+
+    if (data.success)
       setUserState({
         authenticated: true,
-        user: data.data.user,
+        user: data.data,
       });
     else setUserState(userDefault);
   }

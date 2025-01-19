@@ -45,7 +45,7 @@ function App() {
               }
             />
             <Route
-              path="instructor"
+              path="admin"
               element={
                 <RouteGuard
                   authenticated={userState?.authenticated}
