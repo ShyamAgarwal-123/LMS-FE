@@ -2,7 +2,7 @@ import React from "react";
 import { Button } from "../ui/button";
 import { Input } from "../ui/input";
 import { Label } from "../ui/label";
-import { useSignIn } from "@/hooks/auth-hook";
+import { useSignIn } from "@/customhook/auth-hook";
 import {
   Card,
   CardContent,
@@ -15,7 +15,7 @@ function SignInForm() {
   const [signInData, setSignInData, handelSignIn] = useSignIn();
 
   return (
-    <Card className="p-6">
+    <Card className="p-5">
       <CardHeader>
         <CardTitle>Sign in to your account</CardTitle>
         <CardDescription>
@@ -46,21 +46,6 @@ function SignInForm() {
               onChange={(e) =>
                 setSignInData({ ...signInData, password: e.target.value })
               }
-            />
-          </div>
-          <div className="flex flex-row-reverse items-center gap-2">
-            <Label htmlFor={"role"}>Sign In as Admin</Label>
-            <Input
-              type={"checkbox"}
-              className="h-3 w-3"
-              checked={signInData.role === "admin"}
-              onChange={(e) => {
-                if (e.target.checked) {
-                  setSignInData({ ...signInData, role: "admin" });
-                } else {
-                  setSignInData({ ...signInData, role: "user" });
-                }
-              }}
             />
           </div>
           <Button type="submit">Sign in</Button>

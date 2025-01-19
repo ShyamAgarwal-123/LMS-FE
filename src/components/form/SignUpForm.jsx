@@ -2,7 +2,7 @@ import React from "react";
 import { Button } from "../ui/button";
 import { Input } from "../ui/input";
 import { Label } from "../ui/label";
-import { useSignUp } from "@/hooks/auth-hook";
+import { useSignUp } from "@/customhook/auth-hook";
 import {
   Card,
   CardContent,

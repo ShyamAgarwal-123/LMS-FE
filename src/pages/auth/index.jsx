@@ -1,9 +1,11 @@
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useState } from "react";
 import { SignInForm, SignUpForm } from "@/components/form";
+import { useCheckAuthUser } from "@/customhook/auth-hook";
 
 function AuthPage() {
   const [activeTab, setActiveTab] = useState("signin");
+  const user = useCheckAuthUser();
   return (
     <div className="min-h-screen w-full flex items-center justify-center">
       <Tabs

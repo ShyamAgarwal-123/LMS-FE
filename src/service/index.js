@@ -1,11 +1,8 @@
-import axios from "axios";
+import { axiosInstance, axiosInstanceWithAuth } from "@/api/axiosInstance.js";
 
 export const signUpService = async (formData) => {
   try {
-    const response = await axios.post(
-      `http://localhost:3000/api/v1/${formData.role}s/signup`,
-      formData
-    );
+    const response = await axiosInstance.post(`/user/signup`, formData);
     return response.data;
   } catch ({ response }) {
     return response.data;
@@ -14,10 +11,16 @@ export const signUpService = async (formData) => {
 
 export const signInService = async (formData) => {
   try {
-    const response = await axios.post(
-      `http://localhost:3000/api/v1/${formData.role}s/signin`,
-      formData
-    );
+    const response = await axiosInstance.post(`/user/signin`, formData);
+    return response.data;
+  } catch ({ response }) {
+    return response.data;
+  }
+};
+
+export const getUserService = async () => {
+  try {
+    const response = await axiosInstanceWithAuth.get(`/user/getUser`);
     return response.data;
   } catch ({ response }) {
     return response.data;

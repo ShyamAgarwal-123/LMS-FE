@@ -3,7 +3,6 @@ import { atom } from "recoil";
 export const signInDefault = {
   email: "",
   password: "",
-  role: "user",
 };
 
 export const signInAtom = atom({
@@ -21,4 +20,14 @@ export const signUpDefault = {
 export const signUpAtom = atom({
   key: "signUpAtom",
   default: signUpDefault,
+});
+
+export const userDefault = {
+  authenticate: false,
+  user: null,
+};
+
+export const userAtom = atom({
+  key: "userAtom",
+  default: userDefault,
 });
