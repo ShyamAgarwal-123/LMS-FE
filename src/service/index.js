@@ -34,9 +34,14 @@ export const signInService = async (formData) => {
 export const getUserService = async () => {
   try {
     const response = await axiosInstance.get(`/user/getUser`);
+    console.log(response);
+
     return response.data;
   } catch ({ response }) {
-    sessionStorage.removeItem("accessToken");
+    const accessToken = JSON.parse(sessionStorage.getItem("accessToken"));
+    if (accessToken) {
+      sessionStorage.removeItem("accessToken");
+    }
     const refreshToken = JSON.parse(sessionStorage.getItem("refreshToken"));
     if (refreshToken) {
       const data = await refreshAccessToken(refreshToken);
@@ -58,8 +63,8 @@ export const refreshAccessToken = async (token) => {
         JSON.stringify(data.data.accessToken)
       );
     }
+    return data;
   } catch ({ response }) {
-    console.log(response);
     sessionStorage.clear();
     return response.data;
   }
