@@ -1,8 +1,8 @@
-import { axiosInstance, axiosInstanceWithAuth } from "@/api/axiosInstance.js";
+import { axiosInstanceWithAuth } from "@/api/axiosInstance.js";
 
 export const signUpService = async (formData) => {
   try {
-    const response = await axiosInstance.post(`/user/signup`, formData);
+    const response = await axiosInstanceWithAuth.post(`/user/signup`, formData);
     return response.data;
   } catch ({ response }) {
     return response.data;
@@ -11,20 +11,16 @@ export const signUpService = async (formData) => {
 
 export const signInService = async (formData) => {
   try {
-    const { data } = await axiosInstance.post(`/user/signin`, formData, {
-      headers: {
-        "Content-Type": "application/json",
-      },
-    });
+    const { data } = await axiosInstanceWithAuth.post(
+      `/user/signin`,
+      formData,
+      {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
     console.log(data);
-    if (data.success) {
-      const { token } = data.data;
-      sessionStorage.setItem("accessToken", JSON.stringify(token.accessToken));
-      sessionStorage.setItem(
-        "refreshToken",
-        JSON.stringify(token.refreshToken)
-      );
-    }
     return data;
   } catch ({ response }) {
     return response.data;
@@ -33,39 +29,21 @@ export const signInService = async (formData) => {
 
 export const getUserService = async () => {
   try {
-    const response = await axiosInstance.get(`/user/getUser`);
-    console.log(response);
-
+    const response = await axiosInstanceWithAuth.get(`/user/getUser`);
     return response.data;
-  } catch ({ response }) {
-    const accessToken = JSON.parse(sessionStorage.getItem("accessToken"));
-    if (accessToken) {
-      sessionStorage.removeItem("accessToken");
-    }
-    const refreshToken = JSON.parse(sessionStorage.getItem("refreshToken"));
-    if (refreshToken) {
-      const data = await refreshAccessToken(refreshToken);
-      return data;
-    }
-    return response.data;
+  } catch ({ response: { data } }) {
+    const refreshData = await refreshAccessToken();
+    return refreshData;
   }
 };
-export const refreshAccessToken = async (token) => {
+
+export const refreshAccessToken = async () => {
   try {
-    const { data } = await axiosInstance.get("/user/refreshAccessToken", {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    });
-    if (data.success) {
-      sessionStorage.setItem(
-        "accessToken",
-        JSON.stringify(data.data.accessToken)
-      );
-    }
+    const { data } = await axiosInstanceWithAuth.get(
+      "/user/refreshAccessToken"
+    );
     return data;
   } catch ({ response }) {
-    sessionStorage.clear();
     return response.data;
   }
 };

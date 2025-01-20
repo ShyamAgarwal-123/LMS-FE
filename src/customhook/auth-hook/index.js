@@ -11,6 +11,7 @@ export const useCheckAuthUser = () => {
       setLoading(true);
       // await new Promise((res) => setTimeout(res, 2000));
       const data = await getUserService();
+      console.log(data);
       if (data?.success)
         setUserState({
           authenticated: true,

@@ -21,8 +21,6 @@ export default function RouteGuard({ authenticated, user, element }) {
   ) {
     return <Navigate to={"/admin"} />;
   } else {
-    console.log(element);
-
     return <>{element}</>;
   }
 }
