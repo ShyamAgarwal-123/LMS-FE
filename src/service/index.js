@@ -29,10 +29,11 @@ export const signInService = async (formData) => {
 
 export const getUserService = async () => {
   try {
-    const response = await axiosInstanceWithAuth.get(`/user/getUser`);
-    return response.data;
+    const { data } = await axiosInstanceWithAuth.get(`/user/getUser`);
+    return data;
   } catch ({ response: { data } }) {
     const refreshData = await refreshAccessToken();
+
     return refreshData;
   }
 };
@@ -42,8 +43,21 @@ export const refreshAccessToken = async () => {
     const { data } = await axiosInstanceWithAuth.get(
       "/user/refreshAccessToken"
     );
+    if (data.success) {
+    }
     return data;
   } catch ({ response }) {
+    return response.data;
+  }
+};
+
+export const logoutService = async () => {
+  try {
+    const { data } = await axiosInstanceWithAuth.post("/user/logout");
+    console.log(data);
+    return data;
+  } catch ({ response }) {
+    console.log(response.data);
     return response.data;
   }
 };
