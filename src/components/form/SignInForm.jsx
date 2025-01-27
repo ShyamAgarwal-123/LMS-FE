@@ -12,7 +12,7 @@ import {
 } from "@/components/ui/card";
 
 function SignInForm() {
-  const [signInData, setSignInData, handelSignIn] = useSignIn();
+  const [signInData, setSignInData, handelSignIn, loading] = useSignIn();
   return (
     <Card className="p-5">
       <CardHeader>
@@ -47,7 +47,7 @@ function SignInForm() {
               }
             />
           </div>
-          <Button type="submit">Sign in</Button>
+          <Button type="submit">{loading ? "loading..." : "Sign in"}</Button>
         </form>
       </CardContent>
     </Card>

@@ -12,7 +12,7 @@ import {
 } from "@/components/ui/card";
 
 function SignUpForm() {
-  const [signUpData, setSignUpData, handelSignUp] = useSignUp();
+  const [signUpData, setSignUpData, handelSignUp, loading] = useSignUp();
 
   return (
     <Card className="p-6">
@@ -73,7 +73,7 @@ function SignUpForm() {
               }}
             />
           </div>
-          <Button type="submit">Sign up</Button>
+          <Button type="submit">{loading ? "loading..." : "Sign up"}</Button>
         </form>
       </CardContent>
     </Card>

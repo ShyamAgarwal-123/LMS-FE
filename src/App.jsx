@@ -27,6 +27,10 @@ const router = createBrowserRouter(
         path="admin/create-new-course"
         element={<RouteGuard element={<AddNewCoursePage />} />}
       />
+      <Route
+        path="admin/:courseId"
+        element={<RouteGuard element={<AddNewCoursePage />} />}
+      />
       <Route path="*" element={<NotFoundPage />} />
     </Route>
   )
