@@ -1,6 +1,7 @@
 import { atom, useRecoilState } from "recoil";
 import { signInService, signUpService } from "@/service";
 import { useUserState, userDefault } from "../user";
+import { useState } from "react";
 export const signInDefault = {
   email: "",
   password: "",
@@ -26,9 +27,11 @@ export const signUpAtom = atom({
 export const useSignIn = () => {
   const [signInData, setSignInData] = useRecoilState(signInAtom);
   const [userState, setUserState] = useUserState();
+  const [loading, setLoading] = useState(false);
 
   const handleSignIn = async (e) => {
     e.preventDefault();
+    setLoading(true);
     const data = await signInService(signInData);
     console.log(userState);
 
@@ -41,19 +44,24 @@ export const useSignIn = () => {
       setUserState(userDefault);
     }
     setSignInData(signInDefault);
+    setLoading(false);
   };
 
-  return [signInData, setSignInData, handleSignIn];
+  return [signInData, setSignInData, handleSignIn, loading];
 };
 
 export const useSignUp = () => {
   const [signUpData, setSignUpData] = useRecoilState(signUpAtom);
+  const [loading, setLoading] = useState(false);
 
   const handleSignUp = async (e) => {
     e.preventDefault();
+    setLoading(true);
+    await new Promise((r) => setTimeout(r, 2000));
     const data = await signUpService(signUpData);
     setSignUpData(signUpDefault);
+    setLoading(false);
   };
 
-  return [signUpData, setSignUpData, handleSignUp];
+  return [signUpData, setSignUpData, handleSignUp, loading];
 };
