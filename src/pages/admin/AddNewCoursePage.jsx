@@ -6,6 +6,8 @@ import LockComponent from "@/components/lock";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useCurrentCourse } from "@/customhook/admin-hook";
+import { togglePublishService } from "@/service";
+import { currentCourseDefault } from "@/store/admin";
 import {
   ArrowLeft,
   GraduationCap,
@@ -20,6 +22,23 @@ function AddNewCoursePage() {
   const { courseId } = useParams();
   const { currentCourseData, setCurrrentCourseData, loading } =
     useCurrentCourse(courseId);
+  if (!courseId) {
+    setCurrrentCourseData(currentCourseDefault);
+  }
+  async function handlePublishState() {
+    const data = await togglePublishService(
+      courseId,
+      !currentCourseData.isPublished
+    );
+    if (data.success) {
+      setCurrrentCourseData({
+        ...currentCourseData,
+        isPublished: !currentCourseData.isPublished,
+      });
+    } else {
+      console.log(data);
+    }
+  }
 
   if (courseId && loading) {
     return <div>Loading.....</div>;
@@ -42,7 +61,15 @@ function AddNewCoursePage() {
               {/* <Button className="bg-white text-black hover:bg-black hover:text-white">
                 Save Update
               </Button> */}
-              <Button className="bg-blue-600 text-white">Publish Course</Button>
+              <Button
+                onClick={handlePublishState}
+                disabled={currentCourseData.progress() !== 100}
+                className="bg-blue-600 text-white transition-all"
+              >
+                {currentCourseData.isPublished
+                  ? "UnPublish Course"
+                  : "Publish Course"}
+              </Button>
             </div>
           </div>
           <div className="flex justify-between w-full items-center">
@@ -111,12 +138,12 @@ function AddNewCoursePage() {
           </TabsContent>
           <TabsContent value="cirriculum">
             <LockComponent isLock={!courseId}>
-              <CourseCurriculum />
+              <CourseCurriculum courseId={courseId} />
             </LockComponent>
           </TabsContent>
           <TabsContent value="settings">
             <LockComponent isLock={!courseId}>
-              <CourseSetting />
+              <CourseSetting courseId={courseId} />
             </LockComponent>
           </TabsContent>
         </Tabs>

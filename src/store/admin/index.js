@@ -1,4 +1,5 @@
 import { atom, selector, useRecoilState } from "recoil";
+import _ from "lodash";
 
 import {
   courseLandingPageDefault,
@@ -50,6 +51,16 @@ export const useCourseLandingPage = () => {
   };
 };
 
+export {
+  courseLandingPageDefault,
+  languageOptions,
+  courseLevelOptions,
+  courseLandingPageFormFields,
+  courseCategories,
+  courseCirriculumDefault,
+};
+
+// course Cirriculum store
 export const courseCirriculumAtom = atom({
   key: "courseCirriculumAtom",
   default: courseCirriculumDefault,
@@ -61,35 +72,29 @@ export const useCourseCirriculumState = () =>
 export const useCourseCirriculum = () => {
   const [courseCirriculumState, setCourseCirriculumState] =
     useCourseCirriculumState();
-  const handleSubmit = () => {};
-
   return {
     courseCirriculumState,
     setCourseCirriculumState,
-    handleSubmit,
   };
-};
-
-export {
-  courseLandingPageDefault,
-  languageOptions,
-  courseLevelOptions,
-  courseLandingPageFormFields,
-  courseCategories,
-  courseCirriculumDefault,
 };
 
 // Current Course Store
 export const currentCourseDefault = {
-  courseId: null,
+  courseId: "",
   courseLandingPageData: courseLandingPageDefault,
   courseCirriculumData: courseCirriculumDefault,
   isPublished: false,
   progress() {
     let progress = 0;
-    if (this.courseId) {
+    if (
+      this.courseId &&
+      _.isEqual(this.courseCirriculumData[0], courseCirriculumDefault[0])
+    ) {
       progress = 50;
-    } else if (this.courseCirriculumData[0] !== courseCirriculumDefault[0]) {
+    } else if (
+      this.courseId &&
+      !_.isEqual(this.courseCirriculumData[0], courseCirriculumDefault[0])
+    ) {
       progress = 100;
     }
     return progress;
@@ -106,7 +111,7 @@ export const useCurrentCourseState = () => useRecoilState(currentCourseAtom);
 export const currentCourseLandingPageAtom = atom({
   key: "currentCourseLandingPageAtom",
   default: selector({
-    key: "currentCourseLandingPageAtom/Defalut",
+    key: "currentCourseCirriculumAtom/Defalut",
     get: ({ get }) => {
       const courseData = get(currentCourseAtom);
       return courseData.courseLandingPageData;
@@ -148,6 +153,30 @@ export const useCurrentCourseLandingPage = () => {
     setCurrrentCourseLandingPageState,
     handleUpdate,
     loading,
+  };
+};
+
+//current  course Cirriculum store
+export const currentCourseCirriculumAtom = atom({
+  key: "currentCourseCirriculumAtom",
+  default: selector({
+    key: "currentCourseAtom/Defalut",
+    get: ({ get }) => {
+      const courseData = get(currentCourseAtom);
+      return courseData.courseCirriculumData;
+    },
+  }),
+});
+
+export const useCurrentCourseCirriculumState = () =>
+  useRecoilState(currentCourseCirriculumAtom);
+
+export const useCurrentCourseCirriculum = () => {
+  const [currentCourseCirriculumState, setCurrentCourseCirriculumState] =
+    useCurrentCourseCirriculumState();
+  return {
+    currentCourseCirriculumState,
+    setCurrentCourseCirriculumState,
   };
 };
 

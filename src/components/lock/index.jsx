@@ -3,7 +3,7 @@ import React from "react";
 
 function LockComponent({ children, isLock }) {
   return (
-    <div className="relative w-full h-full min-h-full">
+    <div className="relative w-full h-full">
       {isLock && (
         <div className="absolute z-20 w-full h-full translate-x-[50%] translate-y-[50%]">
           <Lock className="h-20 w-20" />

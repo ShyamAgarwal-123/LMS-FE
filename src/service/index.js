@@ -118,3 +118,37 @@ export const updateCourseLandingPageService = async (
     return error;
   }
 };
+
+export const uploadVideoService = async (formData, courseId) => {
+  try {
+    const { data } = await axiosInstanceWithAuth.post(
+      `/video/uploadVideo/${courseId}`,
+      formData
+    );
+    return data;
+  } catch (error) {
+    const data = error?.response?.data;
+    if (data) {
+      return data;
+    }
+    return error;
+  }
+};
+
+export const togglePublishService = async (courseId, isPublishedState) => {
+  try {
+    const { data } = await axiosInstanceWithAuth.put(
+      `/course/togglePublish/${courseId}`,
+      {
+        isPublished: isPublishedState,
+      }
+    );
+    return data;
+  } catch (error) {
+    const data = error?.response?.data;
+    if (data) {
+      return data;
+    }
+    return error;
+  }
+};

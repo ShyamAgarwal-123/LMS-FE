@@ -1,5 +1,6 @@
 import { getAdminCoursesService, getCourseService } from "@/service";
 import {
+  courseCirriculumDefault,
   useAllAdminCoursesState,
   useCurrentCourseLandingPageState,
   useCurrentCourseState,
@@ -52,6 +53,9 @@ export const useCurrentCourse = (id) => {
           welcomeMessage: data.welcomeMessage,
         },
         isPublished: data.isPublished,
+        courseCirriculumData: data.videos[0]
+          ? data.videos
+          : courseCirriculumDefault,
       });
     }
     setLoading(false);
