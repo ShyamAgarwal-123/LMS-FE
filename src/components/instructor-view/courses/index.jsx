@@ -1,3 +1,4 @@
+import _ from "lodash";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
@@ -13,12 +14,12 @@ import { useAllAdminCourses } from "@/customhook/admin-hook";
 import { Delete, Edit } from "lucide-react";
 import React from "react";
 import { useNavigate } from "react-router-dom";
+import { allAdminCoursesDefault } from "@/store/admin";
 
 function AdminCourseComponent() {
   const navigate = useNavigate();
   const { allAdminCoursesState, setAllAdminCoursesState, loading } =
     useAllAdminCourses();
-
   const handleEdit = (courseId) => {
     console.log(courseId);
     navigate(`/admin/${courseId}`);
@@ -52,24 +53,29 @@ function AdminCourseComponent() {
             </TableRow>
           </TableHeader>
           <TableBody className="space-y-2">
-            {allAdminCoursesState.map((course) => (
-              <TableRow key={course._id}>
-                <TableCell className="font-medium">{course.title}</TableCell>
-                <TableCell>{course.students}</TableCell>
-                <TableCell>${course.revenue}</TableCell>
-                <TableCell className="text-right sm:flex-row flex-col flex sm:justify-end items-end">
-                  <Button
-                    onClick={() => handleEdit(course._id)}
-                    variant="ghost"
-                  >
-                    <Edit className="h-6 w-6" />
-                  </Button>
-                  <Button variant="ghost">
-                    <Delete className="h-6 w-6w-full" />
-                  </Button>
-                </TableCell>
-              </TableRow>
-            ))}
+            {allAdminCoursesState.map((course) => {
+              if (_.isEqual(course, allAdminCoursesDefault[0])) {
+                return;
+              }
+              return (
+                <TableRow key={course._id}>
+                  <TableCell className="font-medium">{course.title}</TableCell>
+                  <TableCell>{course.students}</TableCell>
+                  <TableCell>${course.revenue}</TableCell>
+                  <TableCell className="text-right sm:flex-row flex-col flex sm:justify-end items-end">
+                    <Button
+                      onClick={() => handleEdit(course._id)}
+                      variant="ghost"
+                    >
+                      <Edit className="h-6 w-6" />
+                    </Button>
+                    <Button variant="ghost">
+                      <Delete className="h-6 w-6w-full" />
+                    </Button>
+                  </TableCell>
+                </TableRow>
+              );
+            })}
           </TableBody>
         </Table>
       </CardContent>

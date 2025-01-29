@@ -1,7 +1,8 @@
 import { getAdminCoursesService, getCourseService } from "@/service";
 import {
-  courseCirriculumDefault,
+  currentCourseDefault,
   useAllAdminCoursesState,
+  useCurrentCourseCurriculumState,
   useCurrentCourseLandingPageState,
   useCurrentCourseState,
 } from "@/store/admin";
@@ -29,17 +30,16 @@ export const useAllAdminCourses = () => {
 };
 
 export const useCurrentCourse = (id) => {
-  const [currentCourseData, setCurrrentCourseData] = useCurrentCourseState();
+  const [currentCourseData, setCurrentCourseData] = useCurrentCourseState();
   const [loading, setLoading] = useState(true);
 
   const getCourse = async (courseId) => {
     setLoading(true);
     const response = await getCourseService(courseId);
-
     if (response.success) {
       const data = response.data;
-      setCurrrentCourseData({
-        ...currentCourseData,
+      setCurrentCourseData((prev) => ({
+        ...prev,
         courseId: data._id,
         courseLandingPageData: {
           title: data.title,
@@ -53,10 +53,10 @@ export const useCurrentCourse = (id) => {
           welcomeMessage: data.welcomeMessage,
         },
         isPublished: data.isPublished,
-        courseCirriculumData: data.videos[0]
+        courseCurriculumData: data.videos[0]
           ? data.videos
-          : courseCirriculumDefault,
-      });
+          : currentCourseDefault.courseCurriculumData,
+      }));
     }
     setLoading(false);
   };
@@ -64,10 +64,12 @@ export const useCurrentCourse = (id) => {
   useEffect(() => {
     if (id) {
       getCourse(id);
+    } else {
+      setCurrentCourseData(currentCourseDefault);
     }
-  }, []);
+  }, [id]);
 
-  return { currentCourseData, setCurrrentCourseData, loading };
+  return { currentCourseData, setCurrentCourseData, loading };
 };
 
 export const useUpdateCurrentCourse = (id) => {

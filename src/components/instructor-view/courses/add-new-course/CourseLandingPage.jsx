@@ -12,7 +12,7 @@ import {
   useCourseLandingPage,
   useCurrentCourseLandingPage,
 } from "@/store/admin";
-import React from "react";
+import React, { useEffect } from "react";
 
 function CourseLandingPage({ courseId, currentCourseData }) {
   const {
@@ -21,13 +21,16 @@ function CourseLandingPage({ courseId, currentCourseData }) {
     handleSubmit,
     loading: submitLoading,
   } = useCourseLandingPage();
+
   const {
+    currentCourseState,
     currentCourseLandingPageState,
     setCurrrentCourseLandingPageState,
     handleUpdate,
     loading: updateLoading,
   } = useCurrentCourseLandingPage();
 
+  console.log(currentCourseState);
   return (
     <Card>
       <CardHeader>

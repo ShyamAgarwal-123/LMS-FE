@@ -6,26 +6,26 @@ import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
 import { uploadVideoService } from "@/service";
 import {
-  courseCirriculumDefault,
-  useCourseCirriculum,
-  useCurrentCourseCirriculum,
+  currentCourseDefault,
+  useCurrentCourseCurriculumState,
 } from "@/store/admin";
-import { LucideDelete } from "lucide-react";
+import { LucideDelete, UploadIcon } from "lucide-react";
 import React from "react";
 
 function CourseCurriculum({ courseId }) {
-  const { currentCourseCirriculumState, setCurrentCourseCirriculumState } =
-    useCurrentCourseCirriculum();
+  const [currentCourseCurriculumState, setCurrentCourseCurriculumState] =
+    useCurrentCourseCurriculumState();
+  console.log(currentCourseCurriculumState);
 
   function handleNewLecture() {
-    setCurrentCourseCirriculumState((prev) => [
+    setCurrentCourseCurriculumState((prev) => [
       ...prev,
-      currentCourseCirriculumState[0],
+      currentCourseDefault.courseCurriculumData[0],
     ]);
   }
-  function handleDelete(e, index) {
-    if (index !== 0 && !currentCourseCirriculumState[index].videoUrl) {
-      setCurrentCourseCirriculumState((prev) => {
+  function handleRemove(e, index) {
+    if (index !== 0 && !currentCourseCurriculumState[index].videoUrl) {
+      setCurrentCourseCurriculumState((prev) => {
         prev.slice(0, index).concat(prev.slice(index + 1));
       });
     } else alert("One Lecture is Required");
@@ -33,7 +33,7 @@ function CourseCurriculum({ courseId }) {
 
   function handleInput(e, index) {
     const newtitle = e.target.value;
-    setCurrentCourseCirriculumState((prev) =>
+    setCurrentCourseCurriculumState((prev) =>
       prev.map((item, ind) => {
         if (ind === index) {
           const newiteam = { ...item };
@@ -46,7 +46,7 @@ function CourseCurriculum({ courseId }) {
 
   function handleSwitch(currentValue, index) {
     const newFreePreview = currentValue;
-    setCurrentCourseCirriculumState((prev) =>
+    setCurrentCourseCurriculumState((prev) =>
       prev.map((item, ind) => {
         if (ind === index) {
           const newiteam = { ...item };
@@ -62,15 +62,15 @@ function CourseCurriculum({ courseId }) {
 
     const formData = new FormData();
     formData.append("file", file);
-    formData.append("title", currentCourseCirriculumState[index].title);
+    formData.append("title", currentCourseCurriculumState[index].title);
     formData.append(
       "freePreview",
-      currentCourseCirriculumState[index].freePreview
+      currentCourseCurriculumState[index].freePreview
     );
 
     const data = await uploadVideoService(formData, courseId);
     if (data.success) {
-      setCurrentCourseCirriculumState((prev) =>
+      setCurrentCourseCurriculumState((prev) =>
         prev.map((item, indx) => {
           if (indx === index) {
             return data.data;
@@ -80,10 +80,10 @@ function CourseCurriculum({ courseId }) {
       );
     } else {
       console.log(data);
-      setCurrentCourseCirriculumState((prev) =>
+      setCurrentCourseCurriculumState((prev) =>
         prev.map((item, indx) => {
           if (indx === index) {
-            return currentCourseCirriculumState[0];
+            return currentCourseCurriculumState[0];
           }
           return item;
         })
@@ -100,12 +100,26 @@ function CourseCurriculum({ courseId }) {
           Add Lecture
         </Button>
         <div className="mt-4 space-y-4">
-          {[...currentCourseCirriculumState].map((cirriculumItem, index) => (
+          {currentCourseCurriculumState.map((cirriculumItem, index) => (
             <div className="border p-5 rounded-md relative" key={index + 1}>
-              <LucideDelete
-                className="absolute top-3 right-5 h-8"
-                onClick={(e) => handleDelete(e, index)}
-              />
+              {cirriculumItem.videoUrl ? (
+                <Button className="bg-blue-500 absolute top-3 right-28">
+                  Update
+                </Button>
+              ) : (
+                <UploadIcon className="absolute top-3 right-20 h-8" />
+              )}
+              {cirriculumItem.videoUrl ? (
+                <Button className="bg-blue-500 absolute top-3 right-5">
+                  Delete
+                </Button>
+              ) : (
+                <LucideDelete
+                  className="absolute top-3 right-5 h-8"
+                  onClick={(e) => handleRemove(e, index)}
+                />
+              )}
+
               <div className="flex gap-5 items-center">
                 <h3 className="font-semibold">Lecture {index + 1}</h3>
                 <Input
@@ -132,11 +146,7 @@ function CourseCurriculum({ courseId }) {
                 <Input
                   type="file"
                   accept="video/*"
-                  onChange={(e) => {
-                    handleSingleLectureUpload(e, index);
-                  }}
                   className="justify-center mb-4 cursor-pointer file:bg-blue-300 file:rounded-sm file:px-2 file:font-semibold file:text-blue-700"
-                  disabled={!cirriculumItem.title}
                 />
                 {!cirriculumItem.title && (
                   <div

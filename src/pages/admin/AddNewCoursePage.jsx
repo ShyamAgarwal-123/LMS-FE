@@ -7,31 +7,28 @@ import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useCurrentCourse } from "@/customhook/admin-hook";
 import { togglePublishService } from "@/service";
-import { currentCourseDefault } from "@/store/admin";
 import {
   ArrowLeft,
   GraduationCap,
   PanelsRightBottomIcon,
   Settings,
 } from "lucide-react";
-import React, { useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import { useParams } from "react-router-dom";
 
 function AddNewCoursePage() {
   const [activeTab, setActiveTab] = useState("course landing page");
   const { courseId } = useParams();
-  const { currentCourseData, setCurrrentCourseData, loading } =
+  const { currentCourseData, setCurrentCourseData, loading } =
     useCurrentCourse(courseId);
-  if (!courseId) {
-    setCurrrentCourseData(currentCourseDefault);
-  }
+
   async function handlePublishState() {
     const data = await togglePublishService(
       courseId,
       !currentCourseData.isPublished
     );
     if (data.success) {
-      setCurrrentCourseData({
+      setCurrentCourseData({
         ...currentCourseData,
         isPublished: !currentCourseData.isPublished,
       });
@@ -54,7 +51,7 @@ function AddNewCoursePage() {
                 {courseId ? "Update Course" : "Create Course"}
               </h1>
               <span className="bg-white border-2 rounded-2xl px-2 text-xs">
-                Draft
+                {currentCourseData.isPublished ? "Publish" : "Draft"}
               </span>
             </div>
             <div className="flex gap-2">
