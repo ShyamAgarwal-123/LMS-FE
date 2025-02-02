@@ -10,7 +10,6 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { useAllAdminCourses } from "@/customhook/admin-hook";
-``;
 import { Delete, Edit } from "lucide-react";
 import React from "react";
 import { useNavigate } from "react-router-dom";

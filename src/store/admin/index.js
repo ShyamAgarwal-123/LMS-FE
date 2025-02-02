@@ -77,21 +77,7 @@ export const currentCourseDefault = {
   courseLandingPageData: courseLandingPageDefault,
   courseCurriculumData: courseCurriculumDefault,
   isPublished: false,
-  progress() {
-    let progress = 0;
-    if (
-      this.courseId &&
-      _.isEqual(this.courseCurriculumData[0], courseCurriculumDefault[0])
-    ) {
-      progress = 50;
-    } else if (
-      this.courseId &&
-      !_.isEqual(this.courseCurriculumData[0], courseCurriculumDefault[0])
-    ) {
-      progress = 100;
-    }
-    return progress;
-  },
+  progress: 0,
 };
 
 export const currentCourseAtom = atom({
@@ -188,6 +174,24 @@ export const allAdminCoursesAtom = atom({
 });
 export const useAllAdminCoursesState = () =>
   useRecoilState(allAdminCoursesAtom);
+
+// media store
+
+export const mediaUploadProgressAtom = atom({
+  key: "mediaUploadProgressAtom",
+  default: false,
+});
+
+export const useMediaUploadProgressState = () =>
+  useRecoilState(mediaUploadProgressAtom);
+
+export const mediaUploadProgressPercentageAtom = atom({
+  key: "mediaUploadProgressPercentage",
+  default: 0,
+});
+
+export const useMediaUploadProgressPercentageState = () =>
+  useRecoilState(mediaUploadProgressPercentageAtom);
 
 export {
   courseLandingPageDefault,

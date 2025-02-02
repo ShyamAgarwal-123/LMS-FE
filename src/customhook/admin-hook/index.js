@@ -51,6 +51,7 @@ export const useCurrentCourse = (id) => {
           primaryLanguage: data.primaryLanguage,
           subtitle: data.subtitle,
           welcomeMessage: data.welcomeMessage,
+          image: data.thumbnail,
         },
         isPublished: data.isPublished,
         courseCurriculumData: data.videos[0]

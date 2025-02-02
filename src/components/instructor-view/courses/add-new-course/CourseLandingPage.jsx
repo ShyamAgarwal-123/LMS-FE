@@ -29,8 +29,6 @@ function CourseLandingPage({ courseId, currentCourseData }) {
     handleUpdate,
     loading: updateLoading,
   } = useCurrentCourseLandingPage();
-
-  console.log(currentCourseState);
   return (
     <Card>
       <CardHeader>

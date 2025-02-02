@@ -119,11 +119,39 @@ export const updateCourseLandingPageService = async (
   }
 };
 
-export const uploadVideoService = async (formData, courseId) => {
+export const uploadVideoService = async (
+  formData,
+  courseId,
+  videoId,
+  onProgressCallback
+) => {
   try {
+    if (!videoId) {
+      const { data } = await axiosInstanceWithAuth.post(
+        `/video/uploadVideo/${courseId}`,
+        formData,
+        {
+          onUploadProgress: (progressEvent) => {
+            const percentCompleted = Math.round(
+              (progressEvent.loaded * 100) / progressEvent.total
+            );
+            onProgressCallback(percentCompleted);
+          },
+        }
+      );
+      return data;
+    }
     const { data } = await axiosInstanceWithAuth.post(
-      `/video/uploadVideo/${courseId}`,
-      formData
+      `/video/uploadVideo/${courseId}/${videoId}`,
+      formData,
+      {
+        onUploadProgress: (progressEvent) => {
+          const percentCompleted = Math.round(
+            (progressEvent.loaded * 100) / progressEvent.total
+          );
+          onProgressCallback(percentCompleted);
+        },
+      }
     );
     return data;
   } catch (error) {
@@ -143,6 +171,82 @@ export const togglePublishService = async (courseId, isPublishedState) => {
         isPublished: isPublishedState,
       }
     );
+    return data;
+  } catch (error) {
+    const data = error?.response?.data;
+    if (data) {
+      return data;
+    }
+    return error;
+  }
+};
+
+export const uploadVideoDetailsService = async (formData, courseId) => {
+  try {
+    const { data } = await axiosInstanceWithAuth.post(
+      `/video/uploadVideoDetails/${courseId}`,
+      formData
+    );
+    return data;
+  } catch (error) {
+    const data = error?.response?.data;
+    if (data) {
+      return data;
+    }
+    return error;
+  }
+};
+
+export const uploadCourseThumbnailService = async (
+  formData,
+  courseId,
+  onProgressCallback
+) => {
+  try {
+    const { data } = await axiosInstanceWithAuth.put(
+      `/course/uploadThumbnail/${courseId}`,
+      formData,
+      {
+        onUploadProgress: (progressEvent) => {
+          const percentCompleted = Math.round(
+            (progressEvent.loaded * 100) / progressEvent.total
+          );
+          onProgressCallback(percentCompleted);
+        },
+      }
+    );
+    return data;
+  } catch (error) {
+    const data = error?.response?.data;
+    if (data) {
+      return data;
+    }
+    return error;
+  }
+};
+
+export const updateVideoDetailsService = async (formData, videoId) => {
+  try {
+    const { data } = await axiosInstanceWithAuth.put(
+      `/video/uploadVideoDetails/${videoId}`,
+      formData
+    );
+    return data;
+  } catch (error) {
+    const data = error?.response?.data;
+    if (data) {
+      return data;
+    }
+    return error;
+  }
+};
+
+export const deleteVideoDetailsService = async (courseId, videoId) => {
+  try {
+    const { data } = await axiosInstanceWithAuth.delete(
+      `/video/deleteVideoDetails/${courseId}/${videoId}`
+    );
+
     return data;
   } catch (error) {
     const data = error?.response?.data;
