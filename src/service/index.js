@@ -228,7 +228,7 @@ export const uploadCourseThumbnailService = async (
 export const updateVideoDetailsService = async (formData, videoId) => {
   try {
     const { data } = await axiosInstanceWithAuth.put(
-      `/video/uploadVideoDetails/${videoId}`,
+      `/video/updateVideoDetails/${videoId}`,
       formData
     );
     return data;

@@ -142,7 +142,6 @@ export const currentCourseCurriculumSelector = selector({
   key: "currentCourseCurriculumSelector",
   get: ({ get }) => {
     const courseData = get(currentCourseAtom);
-    console.log(courseData);
     return courseData.courseCurriculumData;
   },
   set: ({ get, set }, newCourseCurriculum) => {

@@ -7,13 +7,14 @@ import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useCurrentCourse } from "@/customhook/admin-hook";
 import { togglePublishService } from "@/service";
+import { progress } from "framer-motion";
 import {
   ArrowLeft,
   GraduationCap,
   PanelsRightBottomIcon,
   Settings,
 } from "lucide-react";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useParams } from "react-router-dom";
 
 function AddNewCoursePage() {
@@ -21,6 +22,24 @@ function AddNewCoursePage() {
   const { courseId } = useParams();
   const { currentCourseData, setCurrentCourseData, loading } =
     useCurrentCourse(courseId);
+
+  useEffect(() => {
+    if (courseId) {
+      setCurrentCourseData((prev) => {
+        const is100 = prev.courseCurriculumData.find(
+          (item) => item._id && item.freePreview
+        );
+        if (is100) {
+          return { ...prev, progress: 100 };
+        } else return { ...prev, progress: 50 };
+      });
+    } else {
+      setCurrentCourseData((prev) => ({
+        ...prev,
+        progress: 0,
+      }));
+    }
+  }, [courseId, currentCourseData.courseCurriculumData]);
 
   async function handlePublishState() {
     const data = await togglePublishService(
@@ -51,7 +70,7 @@ function AddNewCoursePage() {
                 {courseId ? "Update Course" : "Create Course"}
               </h1>
               <span className="bg-white border-2 rounded-2xl px-2 text-xs">
-                {currentCourseData.isPublished ? "Publish" : "Draft"}
+                {currentCourseData.isPublished ? "Published" : "Draft"}
               </span>
             </div>
             <div className="flex gap-2">
@@ -60,11 +79,11 @@ function AddNewCoursePage() {
               </Button> */}
               <Button
                 onClick={handlePublishState}
-                disabled={currentCourseData.progress() !== 100}
+                disabled={currentCourseData.progress !== 100}
                 className="bg-blue-600 text-white transition-all"
               >
                 {currentCourseData.isPublished
-                  ? "UnPublish Course"
+                  ? "Unpublish Course"
                   : "Publish Course"}
               </Button>
             </div>
@@ -103,7 +122,7 @@ function AddNewCoursePage() {
                         activeTab === "cirriculum" && "font-medium"
                       }`}
                     >
-                      Cirriculum
+                      Curriculum
                     </span>
                   </TabsTrigger>
 
@@ -121,7 +140,7 @@ function AddNewCoursePage() {
                 </TabsList>
               </Tabs>
             </div>
-            <div>{`${currentCourseData.progress()}/100`}</div>
+            <div>{`${currentCourseData.progress}/100`}</div>
           </div>
         </div>
       </ConfigurableGridBackground>
