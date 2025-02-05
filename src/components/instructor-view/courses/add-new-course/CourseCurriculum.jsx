@@ -7,10 +7,11 @@ import { Switch } from "@/components/ui/switch";
 import VideoPlayer from "@/components/video-player";
 import {
   updateVideoDetailsSchema,
-  uplaodVideoDetailsSchema,
+  uploadVideoDetailsSchema,
 } from "@/inputValidationSchema/videoDetails.schema";
 import {
   deleteVideoDetailsService,
+  deleteVideoService,
   updateCourseLandingPageService,
   updateVideoDetailsService,
   uploadVideoDetailsService,
@@ -35,6 +36,12 @@ function CourseCurriculum({ courseId }) {
     useMediaUploadProgressPercentageState();
 
   function handleNewLecture() {
+    if (
+      !currentCourseCurriculumState[currentCourseCurriculumState.length - 1]._id
+    ) {
+      alert("Uplaod The Current Lecture");
+      return;
+    }
     setCurrentCourseCurriculumState((prev) => [
       ...prev,
       currentCourseDefault.courseCurriculumData[0],
@@ -76,14 +83,11 @@ function CourseCurriculum({ courseId }) {
 
   async function handleSingleLectureUpload(e, index) {
     const file = e.target.files[0];
-    const videoId = currentCourseCurriculumState[index]._id;
     const formData = new FormData();
     formData.append("file", file);
     setMediaUploadProgress(true);
     const data = await uploadVideoService(
       formData,
-      courseId,
-      videoId,
       setMediaUploadProgressPercentage
     );
     console.log(data);
@@ -117,7 +121,7 @@ function CourseCurriculum({ courseId }) {
   async function handleUpload(e, index) {
     const { _id, ...videoDetails } = currentCourseCurriculumState[index];
 
-    const validatedInput = uplaodVideoDetailsSchema.safeParse(videoDetails);
+    const validatedInput = uploadVideoDetailsSchema.safeParse(videoDetails);
     if (!validatedInput.success) {
       console.log(validatedInput);
       return;
@@ -172,13 +176,42 @@ function CourseCurriculum({ courseId }) {
       }
     }
   }
+
+  async function handleReplace(e, index) {
+    const publicId = currentCourseCurriculumState[index].public_id;
+    const videoId = currentCourseCurriculumState[index]._id;
+    setMediaUploadProgress(true);
+    const data = await deleteVideoService(
+      publicId,
+      videoId,
+      setMediaUploadProgressPercentage
+    );
+    if (data.success) {
+      setCurrentCourseCurriculumState((prev) =>
+        prev.map((item, indx) => {
+          if (indx === index) {
+            return {
+              ...Item,
+              videoUrl: "",
+            };
+          }
+          return item;
+        })
+      );
+    }
+    setMediaUploadProgress(false);
+  }
   return (
     <Card>
       <CardHeader>
-        <CardTitle className="text-2xl">Course Curriculum</CardTitle>
+        <CardTitle className="sm:text-2xl text-xl">Course Curriculum</CardTitle>
       </CardHeader>
       <CardContent>
-        <Button onClick={handleNewLecture} className="bg-blue-600">
+        <Button
+          disabled={mediaUploadProgress}
+          onClick={handleNewLecture}
+          className="bg-blue-600 "
+        >
           Add Lecture
         </Button>
         {mediaUploadProgress && (
@@ -189,44 +222,16 @@ function CourseCurriculum({ courseId }) {
         )}
         <div className="mt-4 space-y-4">
           {currentCourseCurriculumState.map((cirriculumItem, index) => (
-            <div className="border p-5 rounded-md relative" key={index + 1}>
-              {cirriculumItem._id ? (
-                <Button
-                  className="bg-blue-500 absolute top-3 right-28"
-                  onClick={(e) => handleUpdate(e, index)}
-                >
-                  Update
-                </Button>
-              ) : (
-                <button
-                  onClick={(e) => handleUpload(e, index)}
-                  className="absolute top-3 right-20 h-8 cursor-pointer"
-                >
-                  <UploadIcon />
-                </button>
-              )}
-              {cirriculumItem._id ? (
-                <Button
-                  onClick={(e) => handleDelete(e, index)}
-                  className="bg-blue-500 absolute top-3 right-5"
-                >
-                  Delete
-                </Button>
-              ) : (
-                <button
-                  className="absolute top-3 right-5 h-8"
-                  onClick={(e) => handleRemove(e, index)}
-                >
-                  <LucideDelete />
-                </button>
-              )}
-
-              <div className="flex gap-5 items-center">
+            <div
+              className="border p-5 rounded-md md:relative flex flex-col"
+              key={index + 1}
+            >
+              <div className="flex gap-5 items-center lg:flex-row flex-col ">
                 <h3 className="font-semibold">Lecture {index + 1}</h3>
                 <Input
                   name={`title-${index + 1}`}
                   placeholder="Enter Lecture Title"
-                  className="max-w-96"
+                  className="max-w-full lg:max-w-96 min-w-40"
                   value={cirriculumItem.title}
                   onChange={(e) => handleInput(e, index)}
                 />
@@ -243,20 +248,61 @@ function CourseCurriculum({ courseId }) {
                   </Label>
                 </div>
               </div>
-              <div className="mt-6 flex gap-2 items-center">
+              <div className="mt-6 flex md:flex-row flex-col md:gap-2 gap-5 w-full items-center">
                 {cirriculumItem.videoUrl && (
                   <VideoPlayer
                     url={cirriculumItem.videoUrl}
-                    width="450px"
-                    height="200px"
+                    className="md:w-[450px] h-[200px] w-full"
                   />
                 )}
-                <Input
-                  type="file"
-                  accept="video/*"
-                  className="file:cursor-pointer justify-center mb-4 cursor-pointer file:bg-blue-300 file:rounded-sm file:px-2 file:font-semibold file:text-blue-700"
-                  onChange={(e) => handleSingleLectureUpload(e, index)}
-                />
+                {cirriculumItem.videoUrl ? (
+                  <Button onClick={(e) => handleReplace(e, index)}>
+                    Replace
+                  </Button>
+                ) : (
+                  <Input
+                    disabled={mediaUploadProgress}
+                    type="file"
+                    accept="video/*"
+                    className="file:cursor-pointer justify-center mb-4 cursor-pointer file:bg-blue-300 file:rounded-sm file:px-2 file:font-semibold file:text-blue-700"
+                    onChange={(e) => handleSingleLectureUpload(e, index)}
+                  />
+                )}
+              </div>
+              <div className="flex gap-5 lg:block justify-center mt-5 sm:justify-start">
+                {cirriculumItem._id ? (
+                  <Button
+                    disabled={mediaUploadProgress}
+                    className="bg-blue-500 lg:absolute lg:top-5 lg:right-28"
+                    onClick={(e) => handleUpdate(e, index)}
+                  >
+                    Update
+                  </Button>
+                ) : (
+                  <button
+                    disabled={mediaUploadProgress}
+                    onClick={(e) => handleUpload(e, index)}
+                    className="lg:absolute lg:top-5 lg:right-20 h-8 cursor-pointer"
+                  >
+                    <UploadIcon />
+                  </button>
+                )}
+                {cirriculumItem._id ? (
+                  <Button
+                    disabled={mediaUploadProgress}
+                    onClick={(e) => handleDelete(e, index)}
+                    className="bg-blue-500 lg:absolute lg:top-5 lg:right-5"
+                  >
+                    Delete
+                  </Button>
+                ) : (
+                  <button
+                    className="lg:absolute lg:top-5 lg:right-5 h-8"
+                    onClick={(e) => handleRemove(e, index)}
+                  >
+                    <LucideDelete />
+                  </button>
+                )}
               </div>
             </div>
           ))}

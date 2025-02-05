@@ -9,6 +9,7 @@ export const courseLandingPageDefault = {
   objectives: "",
   welcomeMessage: "",
   image: "",
+  imageId: "",
 };
 
 export const languageOptions = [

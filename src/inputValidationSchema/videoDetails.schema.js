@@ -11,7 +11,7 @@ export const updateVideoDetailsSchema = z.object({
   _id: z.string(),
 });
 
-export const uplaodVideoDetailsSchema = z.object({
+export const uploadVideoDetailsSchema = z.object({
   title: z
     .string()
     .min(3, "The title must be at least 3 characters")

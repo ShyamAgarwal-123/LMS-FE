@@ -52,6 +52,7 @@ export const useCurrentCourse = (id) => {
           subtitle: data.subtitle,
           welcomeMessage: data.welcomeMessage,
           image: data.thumbnail,
+          imageId: data.thumbnail_id,
         },
         isPublished: data.isPublished,
         courseCurriculumData: data.videos[0]
@@ -71,8 +72,4 @@ export const useCurrentCourse = (id) => {
   }, [id]);
 
   return { currentCourseData, setCurrentCourseData, loading };
-};
-
-export const useUpdateCurrentCourse = (id) => {
-  const [lanPageData, setLanPageData] = useCurrentCourseLandingPageState();
 };

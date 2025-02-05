@@ -119,30 +119,10 @@ export const updateCourseLandingPageService = async (
   }
 };
 
-export const uploadVideoService = async (
-  formData,
-  courseId,
-  videoId,
-  onProgressCallback
-) => {
+export const uploadVideoService = async (formData, onProgressCallback) => {
   try {
-    if (!videoId) {
-      const { data } = await axiosInstanceWithAuth.post(
-        `/video/uploadVideo/${courseId}`,
-        formData,
-        {
-          onUploadProgress: (progressEvent) => {
-            const percentCompleted = Math.round(
-              (progressEvent.loaded * 100) / progressEvent.total
-            );
-            onProgressCallback(percentCompleted);
-          },
-        }
-      );
-      return data;
-    }
     const { data } = await axiosInstanceWithAuth.post(
-      `/video/uploadVideo/${courseId}/${videoId}`,
+      `/video/uploadVideo`,
       formData,
       {
         onUploadProgress: (progressEvent) => {
@@ -224,6 +204,35 @@ export const uploadCourseThumbnailService = async (
     return error;
   }
 };
+export const deleteCourseThumbnailService = async (
+  courseId,
+  publicId,
+  onProgressCallback
+) => {
+  try {
+    const { data } = await axiosInstanceWithAuth.delete(
+      `/course/deleteThumbnail/${courseId}`,
+      {
+        data: {
+          publicId,
+        },
+        onUploadProgress: (progressEvent) => {
+          const percentCompleted = Math.round(
+            (progressEvent.loaded * 100) / progressEvent.total
+          );
+          onProgressCallback(percentCompleted);
+        },
+      }
+    );
+    return data;
+  } catch (error) {
+    const data = error?.response?.data;
+    if (data) {
+      return data;
+    }
+    return error;
+  }
+};
 
 export const updateVideoDetailsService = async (formData, videoId) => {
   try {
@@ -248,6 +257,54 @@ export const deleteVideoDetailsService = async (courseId, videoId) => {
     );
 
     return data;
+  } catch (error) {
+    const data = error?.response?.data;
+    if (data) {
+      return data;
+    }
+    return error;
+  }
+};
+
+export const deleteVideoService = async (
+  publicId,
+  videoId,
+  onProgressCallback
+) => {
+  try {
+    if (videoId) {
+      const { data } = await axiosInstanceWithAuth.delete(
+        `/video/deleteVideo/${videoId}`,
+        {
+          data: {
+            publicId,
+          },
+          onUploadProgress: (progressEvent) => {
+            const percentCompleted = Math.round(
+              (progressEvent.loaded * 100) / progressEvent.total
+            );
+            onProgressCallback(percentCompleted);
+          },
+        }
+      );
+      return data;
+    } else {
+      const { data } = await axiosInstanceWithAuth.delete(
+        `/video/deleteVideo`,
+        {
+          data: {
+            publicId,
+          },
+          onUploadProgress: (progressEvent) => {
+            const percentCompleted = Math.round(
+              (progressEvent.loaded * 100) / progressEvent.total
+            );
+            onProgressCallback(percentCompleted);
+          },
+        }
+      );
+      return data;
+    }
   } catch (error) {
     const data = error?.response?.data;
     if (data) {

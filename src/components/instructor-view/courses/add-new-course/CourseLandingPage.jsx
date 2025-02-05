@@ -43,10 +43,6 @@ function CourseLandingPage({ courseId, currentCourseData }) {
         <CommonForm
           buttonText={courseId ? "Update" : "Submit"}
           loading={submitLoading || updateLoading ? "Loading.." : null}
-          // isButtonDisabled={_.isEqual(
-          //   currentCourseData.courseLandingPageData,
-          //   currentCourseLandingPageState
-          // )}
           courseId={courseId}
           handleSubmit={courseId ? handleUpdate : handleSubmit}
           formData={

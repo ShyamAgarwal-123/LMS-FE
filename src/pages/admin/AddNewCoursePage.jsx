@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useCurrentCourse } from "@/customhook/admin-hook";
 import { togglePublishService } from "@/service";
+import { useMediaUploadProgressState } from "@/store/admin";
 import { progress } from "framer-motion";
 import {
   ArrowLeft,
@@ -15,14 +16,18 @@ import {
   Settings,
 } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 
 function AddNewCoursePage() {
   const [activeTab, setActiveTab] = useState("course landing page");
+  const [mediaUploadProgress, setMediaUploadProgress] =
+    useMediaUploadProgressState();
   const { courseId } = useParams();
   const { currentCourseData, setCurrentCourseData, loading } =
     useCurrentCourse(courseId);
+  console.log(currentCourseData);
 
+  const navigate = useNavigate();
   useEffect(() => {
     if (courseId) {
       setCurrentCourseData((prev) => {
@@ -62,10 +67,15 @@ function AddNewCoursePage() {
   return (
     <div>
       <ConfigurableGridBackground className="border-2">
-        <div className="flex flex-col gap-3 mx-16 pt-6 px-6 pb-2">
-          <div className="flex justify-between mt-2 w-full">
-            <div className="flex gap-2 items-center justify-center">
-              <ArrowLeft />
+        <div className="flex flex-col gap-3 sm:mx-16 pt-6 px-6 pb-2 mx-0">
+          <div className="flex sm:flex-row justify-between mt-2 w-full flex-col gap-2">
+            <div className="flex gap-2 items-center sm:justify-center">
+              <ArrowLeft
+                className="cursor-pointer"
+                onClick={() => {
+                  navigate("/admin");
+                }}
+              />
               <h1 className="text-2xl font-bold ">
                 {courseId ? "Update Course" : "Create Course"}
               </h1>
@@ -73,13 +83,12 @@ function AddNewCoursePage() {
                 {currentCourseData.isPublished ? "Published" : "Draft"}
               </span>
             </div>
-            <div className="flex gap-2">
-              {/* <Button className="bg-white text-black hover:bg-black hover:text-white">
-                Save Update
-              </Button> */}
+            <div className="flex gap-2 justify-end">
               <Button
                 onClick={handlePublishState}
-                disabled={currentCourseData.progress !== 100}
+                disabled={
+                  currentCourseData.progress !== 100 || mediaUploadProgress
+                }
                 className="bg-blue-600 text-white transition-all"
               >
                 {currentCourseData.isPublished
@@ -140,11 +149,12 @@ function AddNewCoursePage() {
                 </TabsList>
               </Tabs>
             </div>
-            <div>{`${currentCourseData.progress}/100`}</div>
+            <div className="sm:hidden absolute top-[80px] left-10">{`${currentCourseData.progress}/100`}</div>
+            <div className="sm:block hidden">{`${currentCourseData.progress}/100`}</div>
           </div>
         </div>
       </ConfigurableGridBackground>
-      <div className="mx-16 p-6 pt-10 min-h-screen">
+      <div className="sm:mx-16 p-6 pt-10 min-h-screen mx-0">
         <Tabs value={activeTab}>
           <TabsContent value="course landing page">
             <CourseLandingPage
