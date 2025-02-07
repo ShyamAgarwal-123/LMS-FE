@@ -25,8 +25,6 @@ function AddNewCoursePage() {
   const { courseId } = useParams();
   const { currentCourseData, setCurrentCourseData, loading } =
     useCurrentCourse(courseId);
-  console.log(currentCourseData);
-
   const navigate = useNavigate();
   useEffect(() => {
     if (courseId) {
@@ -65,7 +63,7 @@ function AddNewCoursePage() {
     return <div>Loading.....</div>;
   }
   return (
-    <div>
+    <div className="flex flex-col justify-center">
       <ConfigurableGridBackground className="border-2">
         <div className="flex flex-col gap-3 sm:mx-16 pt-6 px-6 pb-2 mx-0">
           <div className="flex sm:flex-row justify-between mt-2 w-full flex-col gap-2">

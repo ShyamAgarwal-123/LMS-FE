@@ -13,6 +13,8 @@ import StudentLayout from "./components/student-view/StudentLayout";
 import StudentHomePage from "./pages/student/home";
 import NotFoundPage from "./pages/not-found";
 import AddNewCoursePage from "./pages/admin/AddNewCoursePage";
+import StudentViewCoursesPage from "./pages/student/courses";
+import StudentViewCourseDetailsPage from "./pages/student/courseDetailsPage";
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -20,6 +22,11 @@ const router = createBrowserRouter(
       <Route path="" element={<RouteGuard element={<StudentLayout />} />}>
         <Route path="" element={<StudentHomePage />} />
         <Route path="home" element={<StudentHomePage />} />
+        <Route path="courses" element={<StudentViewCoursesPage />} />
+        <Route
+          path="course/details/:courseId"
+          element={<StudentViewCourseDetailsPage />}
+        />
       </Route>
       <Route path="auth" element={<RouteGuard element={<AuthPage />} />} />
       <Route path="admin" element={<RouteGuard element={<AdminPage />} />} />

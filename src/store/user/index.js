@@ -11,3 +11,14 @@ export const userAtom = atom({
 });
 
 export const useUserState = () => useRecoilState(userAtom);
+
+// student all courses data
+export const allStudentViewCoursesDefault = [];
+
+export const allStudentViewCoursesAtom = atom({
+  key: "allStudentViewCoursesAtom",
+  default: allStudentViewCoursesDefault,
+});
+
+export const useAllStudentViewCoursesState = () =>
+  useRecoilState(allStudentViewCoursesAtom);

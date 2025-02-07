@@ -313,3 +313,46 @@ export const deleteVideoService = async (
     return error;
   }
 };
+
+export const getStudentViewCourseDetailsService = async (courseId) => {
+  try {
+    const { data } = await axiosInstanceWithAuth.get(
+      `/user/studentViewCourse/${courseId}`
+    );
+    return data;
+  } catch (error) {
+    const data = error?.response?.data;
+    if (data) {
+      return data;
+    }
+    return error;
+  }
+};
+
+export const getStudentAllCoursesService = async () => {
+  try {
+    const { data } = await axiosInstanceWithAuth.get(`/user/studentAllCourses`);
+    return data;
+  } catch (error) {
+    const data = error?.response?.data;
+    if (data) {
+      return data;
+    }
+    return error;
+  }
+};
+
+export const getAllStudentViewCourses = async (query) => {
+  try {
+    const { data } = await axiosInstanceWithAuth.get(
+      `/course/allCourses?${query}`
+    );
+    return data;
+  } catch (error) {
+    const data = error?.response?.data;
+    if (data) {
+      return data;
+    }
+    return error;
+  }
+};

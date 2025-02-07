@@ -52,29 +52,35 @@ function AdminCourseComponent() {
             </TableRow>
           </TableHeader>
           <TableBody className="space-y-2">
-            {allAdminCoursesState.map((course) => {
-              if (_.isEqual(course, allAdminCoursesDefault[0])) {
-                return;
-              }
-              return (
-                <TableRow key={course._id}>
-                  <TableCell className="font-medium">{course.title}</TableCell>
-                  <TableCell>{course.students}</TableCell>
-                  <TableCell>${course.revenue}</TableCell>
-                  <TableCell className="text-right sm:flex-row flex-col flex sm:justify-end items-end">
-                    <Button
-                      onClick={() => handleEdit(course._id)}
-                      variant="ghost"
-                    >
-                      <Edit className="h-6 w-6" />
-                    </Button>
-                    <Button variant="ghost">
-                      <Delete className="h-6 w-6w-full" />
-                    </Button>
-                  </TableCell>
-                </TableRow>
-              );
-            })}
+            {allAdminCoursesState && allAdminCoursesState.length > 0 ? (
+              allAdminCoursesState.map((course) => {
+                if (_.isEqual(course, allAdminCoursesDefault[0])) {
+                  return;
+                }
+                return (
+                  <TableRow key={course._id}>
+                    <TableCell className="font-medium">
+                      {course.title}
+                    </TableCell>
+                    <TableCell>{course.students}</TableCell>
+                    <TableCell>${course.revenue}</TableCell>
+                    <TableCell className="text-right sm:flex-row flex-col flex sm:justify-end items-end">
+                      <Button
+                        onClick={() => handleEdit(course._id)}
+                        variant="ghost"
+                      >
+                        <Edit className="h-6 w-6" />
+                      </Button>
+                      <Button variant="ghost">
+                        <Delete className="h-6 w-6w-full" />
+                      </Button>
+                    </TableCell>
+                  </TableRow>
+                );
+              })
+            ) : (
+              <h1>No Courses</h1>
+            )}
           </TableBody>
         </Table>
       </CardContent>

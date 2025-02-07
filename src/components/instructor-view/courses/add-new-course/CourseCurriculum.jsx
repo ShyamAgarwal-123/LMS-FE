@@ -191,7 +191,7 @@ function CourseCurriculum({ courseId }) {
         prev.map((item, indx) => {
           if (indx === index) {
             return {
-              ...Item,
+              ...item,
               videoUrl: "",
             };
           }
