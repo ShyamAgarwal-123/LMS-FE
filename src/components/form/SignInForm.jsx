@@ -3,54 +3,61 @@ import { Button } from "../ui/button";
 import { Input } from "../ui/input";
 import { Label } from "../ui/label";
 import { useSignIn } from "@/store/auth";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+import { Loader2 } from "lucide-react";
 
 function SignInForm() {
   const [signInData, setSignInData, handelSignIn, loading] = useSignIn();
   return (
-    <Card className="p-5">
-      <CardHeader>
-        <CardTitle>Sign in to your account</CardTitle>
-        <CardDescription>
-          Enter your email and password to access your account
-        </CardDescription>
-      </CardHeader>
-      <CardContent className="space-y-2">
-        <form onSubmit={handelSignIn} className="flex flex-col gap-3">
-          <div>
-            <Label htmlFor={"email"}>User Email</Label>
-            <Input
-              placeholder={"Enter Your Email"}
-              id={"email"}
-              type={"email"}
-              value={signInData.email}
-              onChange={(e) =>
-                setSignInData({ ...signInData, email: e.target.value })
-              }
-            />
-          </div>
-          <div>
-            <Label htmlFor={"password"}>Password</Label>
-            <Input
-              placeholder={"Enter You Password"}
-              id={"password"}
-              type={"password"}
-              value={signInData.password}
-              onChange={(e) =>
-                setSignInData({ ...signInData, password: e.target.value })
-              }
-            />
-          </div>
-          <Button type="submit">{loading ? "loading..." : "Sign in"}</Button>
-        </form>
-      </CardContent>
-    </Card>
+    <div className="space-y-4">
+      <form onSubmit={handelSignIn} className="flex flex-col gap-4">
+        <div className="space-y-2">
+          <Label htmlFor="email" className="text-gray-700">
+            Email
+          </Label>
+          <Input
+            placeholder="Enter your email"
+            id="email"
+            type="email"
+            disabled={loading}
+            value={signInData.email}
+            onChange={(e) =>
+              setSignInData({ ...signInData, email: e.target.value })
+            }
+            className="bg-white/40 border-gray-200 focus:bg-white/60 transition-colors"
+          />
+        </div>
+        <div className="space-y-2">
+          <Label htmlFor="password" className="text-gray-700">
+            Password
+          </Label>
+          <Input
+            placeholder="Enter your password"
+            id="password"
+            type="password"
+            disabled={loading}
+            value={signInData.password}
+            onChange={(e) =>
+              setSignInData({ ...signInData, password: e.target.value })
+            }
+            className="bg-white/40 border-gray-200 focus:bg-white/60 transition-colors"
+          />
+        </div>
+        <Button
+          type="submit"
+          disabled={loading}
+          className="bg-blue-500 hover:bg-blue-600 text-white transition-colors mt-2 disabled:opacity-50"
+        >
+          {loading ? (
+            <>
+              <Loader2 className="h-4 w-4 animate-spin" />
+              Signing in...
+            </>
+          ) : (
+            "Sign in"
+          )}
+        </Button>
+      </form>
+    </div>
   );
 }
 
