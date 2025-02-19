@@ -74,7 +74,7 @@ export const createCourseLandingPageService = async (formData) => {
 
 export const getAdminCoursesService = async () => {
   try {
-    const { data } = await axiosInstanceWithAuth.get(`/course/getAdminCourses`);
+    const { data } = await axiosInstanceWithAuth.get(`/user/getAdminCourses`);
     return data;
   } catch (error) {
     const data = error?.response?.data;
@@ -317,7 +317,7 @@ export const deleteVideoService = async (
 export const getStudentViewCourseDetailsService = async (courseId) => {
   try {
     const { data } = await axiosInstanceWithAuth.get(
-      `/user/studentViewCourse/${courseId}`
+      `/course/getCourse/${courseId}`
     );
     return data;
   } catch (error) {
@@ -342,7 +342,7 @@ export const getStudentAllCoursesService = async () => {
   }
 };
 
-export const getAllStudentViewCourses = async (query) => {
+export const getAllStudentViewCoursesService = async (query) => {
   try {
     const { data } = await axiosInstanceWithAuth.get(
       `/course/allCourses?${query}`

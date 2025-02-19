@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import { atom, useRecoilState } from "recoil";
 
 export const userDefault = {
@@ -22,3 +23,13 @@ export const allStudentViewCoursesAtom = atom({
 
 export const useAllStudentViewCoursesState = () =>
   useRecoilState(allStudentViewCoursesAtom);
+
+// Student view Course Details
+
+export const studentViewCourseDetailsAtom = atom({
+  key: "studentViewCourseDetailsAtom",
+  default: null,
+});
+
+export const useStudentViewCourseDetailsState = () =>
+  useRecoilState(studentViewCourseDetailsAtom);

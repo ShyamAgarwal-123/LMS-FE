@@ -1,5 +1,11 @@
-import { getAllStudentViewCourses } from "@/service";
-import { useAllStudentViewCoursesState } from "@/store/user";
+import {
+  getAllStudentViewCoursesService,
+  getStudentViewCourseDetailsService,
+} from "@/service";
+import {
+  useAllStudentViewCoursesState,
+  useStudentViewCourseDetailsState,
+} from "@/store/user";
 import { useEffect, useState } from "react";
 
 export const useAllStudentViewCourses = (filters, sort) => {
@@ -12,9 +18,13 @@ export const useAllStudentViewCourses = (filters, sort) => {
       sortBy: sort,
     });
     setLoading(true);
-    const data = await getAllStudentViewCourses(query);
+    const data = await getAllStudentViewCoursesService(query);
+    console.log(data);
+
     if (data.success) {
       setAllStudentViewCoursesState(data?.data);
+    } else if (data.statusCode === 404) {
+      setAllStudentViewCoursesState([]);
     }
     setLoading(false);
   }
@@ -28,4 +38,24 @@ export const useAllStudentViewCourses = (filters, sort) => {
     setAllStudentViewCoursesState,
     loading,
   };
+};
+
+export const useStudentViewCurrentCourse = (courseId) => {
+  const [studentViewCourseDetails, setStudentViewCourseDetails] =
+    useStudentViewCourseDetailsState();
+  const [loading, setLoading] = useState(false);
+
+  const fetchStudentViewCourseDetails = async (courseId) => {
+    setLoading(true);
+    const data = await getStudentViewCourseDetailsService(courseId);
+    console.log(data);
+    setStudentViewCourseDetails(data?.data);
+    setLoading(false);
+  };
+  useEffect(() => {
+    if (courseId) {
+      fetchStudentViewCourseDetails(courseId);
+    }
+  }, [courseId]);
+  return { studentViewCourseDetails, loading };
 };
