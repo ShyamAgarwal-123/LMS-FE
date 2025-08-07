@@ -12,7 +12,7 @@ import AdminPage from "./pages/admin";
 import StudentLayout from "./components/student-view/StudentLayout";
 import StudentHomePage from "./pages/student/home";
 import NotFoundPage from "./pages/not-found";
-import AddNewCoursePage from "./pages/admin/AddNewCoursePage";
+import AddNewCoursePage from "./components/instructor-view/courses/add-new-course/AddNewCoursePage";
 import StudentViewCoursesPage from "./pages/student/courses";
 import StudentViewCourseDetailsPage from "./pages/student/courseDetailsPage";
 

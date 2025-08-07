@@ -32,7 +32,6 @@ export const useSignIn = () => {
   const handleSignIn = async (e) => {
     e.preventDefault();
     setLoading(true);
-    await new Promise((r) => setTimeout(r, 2000));
     const data = await signInService(signInData);
     console.log(userState);
 
@@ -58,7 +57,6 @@ export const useSignUp = () => {
   const handleSignUp = async (e) => {
     e.preventDefault();
     setLoading(true);
-    await new Promise((r) => setTimeout(r, 2000));
     const data = await signUpService(signUpData);
     setSignUpData(signUpDefault);
     setLoading(false);

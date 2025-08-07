@@ -1,4 +1,5 @@
 import { axiosInstanceWithAuth } from "@/api/axiosInstance.js";
+import axios from "axios";
 
 export const signUpService = async (formData) => {
   try {
@@ -119,30 +120,6 @@ export const updateCourseLandingPageService = async (
   }
 };
 
-export const uploadVideoService = async (formData, onProgressCallback) => {
-  try {
-    const { data } = await axiosInstanceWithAuth.post(
-      `/video/uploadVideo`,
-      formData,
-      {
-        onUploadProgress: (progressEvent) => {
-          const percentCompleted = Math.round(
-            (progressEvent.loaded * 100) / progressEvent.total
-          );
-          onProgressCallback(percentCompleted);
-        },
-      }
-    );
-    return data;
-  } catch (error) {
-    const data = error?.response?.data;
-    if (data) {
-      return data;
-    }
-    return error;
-  }
-};
-
 export const togglePublishService = async (courseId, isPublishedState) => {
   try {
     const { data } = await axiosInstanceWithAuth.put(
@@ -150,22 +127,6 @@ export const togglePublishService = async (courseId, isPublishedState) => {
       {
         isPublished: isPublishedState,
       }
-    );
-    return data;
-  } catch (error) {
-    const data = error?.response?.data;
-    if (data) {
-      return data;
-    }
-    return error;
-  }
-};
-
-export const uploadVideoDetailsService = async (formData, courseId) => {
-  try {
-    const { data } = await axiosInstanceWithAuth.post(
-      `/video/uploadVideoDetails/${courseId}`,
-      formData
     );
     return data;
   } catch (error) {
@@ -265,55 +226,6 @@ export const deleteVideoDetailsService = async (courseId, videoId) => {
     return error;
   }
 };
-
-export const deleteVideoService = async (
-  publicId,
-  videoId,
-  onProgressCallback
-) => {
-  try {
-    if (videoId) {
-      const { data } = await axiosInstanceWithAuth.delete(
-        `/video/deleteVideo/${videoId}`,
-        {
-          data: {
-            publicId,
-          },
-          onUploadProgress: (progressEvent) => {
-            const percentCompleted = Math.round(
-              (progressEvent.loaded * 100) / progressEvent.total
-            );
-            onProgressCallback(percentCompleted);
-          },
-        }
-      );
-      return data;
-    } else {
-      const { data } = await axiosInstanceWithAuth.delete(
-        `/video/deleteVideo`,
-        {
-          data: {
-            publicId,
-          },
-          onUploadProgress: (progressEvent) => {
-            const percentCompleted = Math.round(
-              (progressEvent.loaded * 100) / progressEvent.total
-            );
-            onProgressCallback(percentCompleted);
-          },
-        }
-      );
-      return data;
-    }
-  } catch (error) {
-    const data = error?.response?.data;
-    if (data) {
-      return data;
-    }
-    return error;
-  }
-};
-
 export const getStudentViewCourseDetailsService = async (courseId) => {
   try {
     const { data } = await axiosInstanceWithAuth.get(
@@ -346,6 +258,110 @@ export const getAllStudentViewCoursesService = async (query) => {
   try {
     const { data } = await axiosInstanceWithAuth.get(
       `/course/allCourses?${query}`
+    );
+    return data;
+  } catch (error) {
+    const data = error?.response?.data;
+    if (data) {
+      return data;
+    }
+    return error;
+  }
+};
+
+export const getUploadPreSignedURLSevice = async (file, folder) => {
+  try {
+    const { data } = await axiosInstanceWithAuth.get(
+      `/s3/upload-url?file=${encodeURIComponent(
+        file
+      )}&folder=${encodeURIComponent(folder)}`
+    );
+    return data;
+  } catch (error) {
+    const data = error?.response?.data;
+    if (data) {
+      return data;
+    }
+    return error;
+  }
+};
+export const uploadS3VideoDetailsService = async (formData, courseId) => {
+  try {
+    const { data } = await axiosInstanceWithAuth.post(
+      `/video/uploadVideoDetails/${courseId}`,
+      formData
+    );
+    return data;
+  } catch (error) {
+    const data = error?.response?.data;
+    if (data) {
+      return data;
+    }
+    return error;
+  }
+};
+
+export const uploadVideoToS3Service = async (
+  signedURL,
+  file,
+  onProgressCallback
+) => {
+  try {
+    const response = await axios.put(signedURL, file, {
+      headers: {
+        "Content-Type": file.type,
+      },
+      onUploadProgress: (progressEvent) => {
+        const progress = Math.round(
+          (progressEvent.loaded * 100) / progressEvent.total
+        );
+        onProgressCallback(progress);
+      },
+    });
+    return response;
+  } catch (error) {
+    const data = error?.response?.data;
+    if (data) {
+      return data;
+    }
+    return error;
+  }
+};
+
+export const getGetPreSignedURLService = async (key) => {
+  try {
+    const { data } = await axiosInstanceWithAuth.get(
+      `/s3/get-url?key=${encodeURIComponent(key)}`
+    );
+    return data;
+  } catch (error) {
+    const data = error?.response?.data;
+    if (data) {
+      return data;
+    }
+    return error;
+  }
+};
+
+export const getMultipleVideoGETPreSignedURLS = async (videos) => {
+  try {
+    const { data } = await axiosInstanceWithAuth.post(`/s3/multi-get-url`, {
+      videos,
+    });
+    return data;
+  } catch (error) {
+    const data = error?.response?.data;
+    if (data) {
+      return data;
+    }
+    return error;
+  }
+};
+
+export const deleteS3ObjectService = async (key) => {
+  try {
+    const { data } = await axiosInstanceWithAuth.delete(
+      `/s3/delete?key=${encodeURIComponent(key)}`
     );
     return data;
   } catch (error) {

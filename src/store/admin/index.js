@@ -17,6 +17,17 @@ import {
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
+// admin sidebar active tab
+
+export const sidebarActiveTabAtom = atom({
+  key: "sidebarActiveTabAtom",
+  default: "Dashboard",
+});
+
+export const useSideBarActivateTabState = () => {
+  return useRecoilState(sidebarActiveTabAtom);
+};
+
 // Course Landing Page
 
 export const courseLandingPageAtom = atom({
