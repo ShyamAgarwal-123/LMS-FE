@@ -200,32 +200,28 @@ function CourseCurriculum({ courseId, isPublished }) {
       return;
     }
     let no_of_Lect = 0;
-
+    let isFreePreview = false;
     for (let i = 0; i < currentCourseCurriculumState.length; i++) {
       if (currentCourseCurriculumState[i]._id) {
         no_of_Lect++;
       }
+      if (currentCourseCurriculumState[i].freePreview) {
+        isFreePreview = true;
+      }
     }
 
     const { _id, ...newVideoDetails } = videoDetails;
-    if (no_of_Lect == 1 && isPublished && !newVideoDetails.freePreview) {
+    if (isPublished && !isFreePreview) {
       alert("Alteast one video Should be Free in a publised course");
       return;
     }
+
     const data = await updateVideoDetailsService(newVideoDetails, _id);
     if (!data.success) {
+      alert("Unable to Upadate the Course Curriculum");
+      return;
     }
-    setCurrentCourseCurriculumState((prev) => {
-      return prev.map((video, indx) => {
-        if (index === index) {
-          return {
-            ...video,
-            freePreview: data.data.freePreview,
-            title: data.data.title,
-          };
-        }
-      });
-    });
+    alert("Video Successfully updated");
   }
 
   async function handleDelete(e, index) {
