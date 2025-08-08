@@ -17,15 +17,33 @@ export const useCheckAuthUser = () => {
         });
       } else if (data?.success) {
         checkAuthUser();
-      } else setUserState(userDefault);
+      } else {
+        setUserState(userDefault);
+      }
       setLoading(false);
     } catch (error) {
       console.log(error);
+      setUserState(userDefault);
+      setLoading(false);
     }
   }
 
   useEffect(() => {
     checkAuthUser();
+
+    // Listen for auth refresh failures
+    const handleAuthRefreshFailed = () => {
+      setUserState(userDefault);
+    };
+
+    window.addEventListener("auth-refresh-failed", handleAuthRefreshFailed);
+
+    return () => {
+      window.removeEventListener(
+        "auth-refresh-failed",
+        handleAuthRefreshFailed
+      );
+    };
   }, []);
 
   return { userState, loading };

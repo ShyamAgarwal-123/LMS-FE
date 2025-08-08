@@ -5,8 +5,12 @@ export const signUpService = async (formData) => {
   try {
     const response = await axiosInstanceWithAuth.post(`/user/signup`, formData);
     return response.data;
-  } catch ({ response }) {
-    return response.data;
+  } catch (error) {
+    const data = error?.response?.data;
+    if (data) {
+      return data;
+    }
+    return error;
   }
 };
 
@@ -15,8 +19,12 @@ export const signInService = async (formData) => {
     const { data } = await axiosInstanceWithAuth.post(`/user/signin`, formData);
     console.log(data);
     return data;
-  } catch ({ response }) {
-    return response.data;
+  } catch (error) {
+    const data = error?.response?.data;
+    if (data) {
+      return data;
+    }
+    return error;
   }
 };
 
@@ -39,8 +47,12 @@ export const refreshAccessToken = async () => {
       "/user/refreshAccessToken"
     );
     return data;
-  } catch ({ response: { data } }) {
-    return data;
+  } catch (error) {
+    const data = error?.response?.data;
+    if (data) {
+      return data;
+    }
+    return error;
   }
 };
 
