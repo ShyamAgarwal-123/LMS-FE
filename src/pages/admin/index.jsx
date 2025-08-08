@@ -3,17 +3,25 @@ import { Button } from "../../components/ui/button";
 import { Bell, Menu, Search, User, X } from "lucide-react";
 import { Input } from "../../components/ui/input";
 import SideBar from "@/components/sidebar/index2";
-import { useSideBarActivateTabState } from "@/store/admin";
+import {
+  useAllAdminCoursesState,
+  useSideBarActivateTabState,
+} from "@/store/admin";
 import { Tabs } from "@/components/ui/tabs";
 import { TabsContent } from "@radix-ui/react-tabs";
 import AdminCourseComponent from "../../components/instructor-view/courses";
 import AdminDashboardComponent from "@/components/instructor-view/dashboard";
+import { useUserState } from "@/store/user";
+import UserProfile from "@/components/user-profile";
 function AdminPage({ children }) {
   const [sidebarOpen, setSideBarOpen] = useState(false);
   const [activeTab, setActiveTab] = useSideBarActivateTabState();
-
+  const [user] = useUserState();
+  const [courses] = useAllAdminCoursesState();
+  const [isProfileOpen, setIsProfileOpen] = useState(false);
   return (
-    <div className="min-h-screen bg-background font-primary">
+    <div className="relative min-h-screen bg-background font-primary">
+      {isProfileOpen && <UserProfile setState={setIsProfileOpen} />}
       {/* NavBar */}
       <header className="h-16 bg-card border-b border-border flex items-center justify-between px-4 lg:px-6 shadow-card">
         <div className="flex items-center gap-4">
@@ -57,12 +65,17 @@ function AdminPage({ children }) {
             </span>
           </Button>
 
-          <Button className="gap-2" variant="ghost" size="sm">
+          <Button
+            className="gap-2"
+            variant="ghost"
+            size="sm"
+            onClick={() => setIsProfileOpen(!isProfileOpen)}
+          >
             <div className="w-7 h-7 bg-primary rounded-full flex items-center justify-center">
               <User className="h-4 w-4 text-primary-foreground" />
             </div>
             <span className="hidden sm:inline text-sm font-medium">
-              Shyam Agarwal
+              {user.user.username}
             </span>
           </Button>
         </div>

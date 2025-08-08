@@ -14,7 +14,7 @@ import { useAllAdminCourses } from "@/customhook/admin-hook";
 import { Delete, Edit } from "lucide-react";
 import React from "react";
 import { useNavigate } from "react-router-dom";
-import { allAdminCoursesDefault } from "@/store/admin";
+import { allAdminCoursesDefault, useAllAdminCoursesState } from "@/store/admin";
 
 // Skeleton Loading Component
 function CoursesSkeleton() {
@@ -65,6 +65,7 @@ function AdminCourseComponent() {
   const navigate = useNavigate();
   const { allAdminCoursesState, setAllAdminCoursesState, loading } =
     useAllAdminCourses();
+  // const [allAdminCoursesState] = useAllAdminCoursesState();
   const handleEdit = (courseId) => {
     console.log(courseId);
     navigate(`/admin/${courseId}`);
