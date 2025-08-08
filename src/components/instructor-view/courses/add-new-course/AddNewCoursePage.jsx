@@ -81,7 +81,7 @@ function AddNewCoursePage() {
         isPublished: !currentCourseData.isPublished,
       });
     } else {
-      console.log(data);
+      alert(`${data.message}`);
     }
   }
 

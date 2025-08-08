@@ -138,23 +138,11 @@ export const togglePublishService = async (courseId, isPublishedState) => {
   }
 };
 
-export const uploadCourseThumbnailService = async (
-  formData,
-  courseId,
-  onProgressCallback
-) => {
+export const uploadCourseThumbnailService = async (formData, courseId) => {
   try {
     const { data } = await axiosInstanceWithAuth.put(
       `/course/uploadThumbnail/${courseId}`,
-      formData,
-      {
-        onUploadProgress: (progressEvent) => {
-          const percentCompleted = Math.round(
-            (progressEvent.loaded * 100) / progressEvent.total
-          );
-          onProgressCallback(percentCompleted);
-        },
-      }
+      formData
     );
     return data;
   } catch (error) {
@@ -301,7 +289,7 @@ export const uploadS3VideoDetailsService = async (formData, courseId) => {
   }
 };
 
-export const uploadVideoToS3Service = async (
+export const uploadToS3Service = async (
   signedURL,
   file,
   onProgressCallback
@@ -362,6 +350,21 @@ export const deleteS3ObjectService = async (key) => {
   try {
     const { data } = await axiosInstanceWithAuth.delete(
       `/s3/delete?key=${encodeURIComponent(key)}`
+    );
+    return data;
+  } catch (error) {
+    const data = error?.response?.data;
+    if (data) {
+      return data;
+    }
+    return error;
+  }
+};
+
+export const getPublicS3ObjectUrlService = async (key) => {
+  try {
+    const { data } = await axiosInstanceWithAuth.get(
+      `s3/public-url?key=${encodeURIComponent(key)}`
     );
     return data;
   } catch (error) {

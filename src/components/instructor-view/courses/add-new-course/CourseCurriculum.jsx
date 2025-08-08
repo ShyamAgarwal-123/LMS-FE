@@ -17,7 +17,7 @@ import {
   updateCourseLandingPageService,
   updateVideoDetailsService,
   uploadS3VideoDetailsService,
-  uploadVideoToS3Service,
+  uploadToS3Service,
 } from "@/service";
 import {
   currentCourseDefault,
@@ -121,7 +121,7 @@ function CourseCurriculum({ courseId, isPublished }) {
       if (!data1.success) {
         throw new Error(data1.message || "Failed to get upload URL");
       }
-      const response = await uploadVideoToS3Service(
+      const response = await uploadToS3Service(
         data1.data.uploadURL,
         file,
         setMediaUploadProgressPercentage
@@ -130,13 +130,13 @@ function CourseCurriculum({ courseId, isPublished }) {
       if (response.status !== 200) {
         throw new Error("Failed to upload to S3");
       }
-      const data2 = await getGetPreSignedURLService(data1.data.Key);
+      const data2 = await getGetPreSignedURLService(data1.data.key);
       setCurrentCourseCurriculumState((prev) =>
         prev.map((item, indx) => {
           if (indx === index) {
             return {
               ...item,
-              videoUrl: data2.data.getURL, // Clean URL without query params
+              videoUrl: data2.data.getURL,
               s3Key: data2.data.key,
             };
           }
@@ -150,7 +150,7 @@ function CourseCurriculum({ courseId, isPublished }) {
         prev.map((item, indx) => {
           if (indx === index) {
             return {
-              ...currentCourseCurriculumState[0], // Reset to default
+              ...currentCourseCurriculumState[0],
             };
           }
           return item;
@@ -320,7 +320,7 @@ function CourseCurriculum({ courseId, isPublished }) {
           throw new Error(uploadData.message || "Failed to get upload URL");
         }
 
-        const response = await uploadVideoToS3Service(
+        const response = await uploadToS3Service(
           uploadData.data.uploadURL,
           file,
           setMediaUploadProgressPercentage
@@ -329,9 +329,9 @@ function CourseCurriculum({ courseId, isPublished }) {
         if (response.status !== 200) {
           throw new Error("Failed to upload new video to S3");
         }
-        console.log(uploadData.data.Key);
+        console.log(uploadData.data.key);
 
-        const getUrlData = await getGetPreSignedURLService(uploadData.data.Key);
+        const getUrlData = await getGetPreSignedURLService(uploadData.data.key);
         if (!getUrlData.success) {
           throw new Error("Failed to get video URL");
         }
