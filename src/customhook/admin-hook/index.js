@@ -19,6 +19,7 @@ export const useAllAdminCourses = () => {
 
   const getAdminCourses = async () => {
     setLoading(true);
+    // await new Promise((r) => setTimeout(r, 2000));
     const data = await getAdminCoursesService();
     if (data.success) {
       setAllAdminCoursesState(data.data);
