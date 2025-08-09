@@ -5,6 +5,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
 import VideoPlayer from "@/components/video-player";
+import { useToast } from "@/hooks/use-toast";
 import {
   updateVideoDetailsSchema,
   uploadVideoDetailsSchema,
@@ -36,6 +37,7 @@ function CourseCurriculum({ courseId, isPublished }) {
     useMediaUploadProgressState();
   const [mediaUploadProgressPercentage, setMediaUploadProgressPercentage] =
     useMediaUploadProgressPercentageState();
+  const { toast } = useToast();
 
   function handleNewLecture() {
     if (
@@ -212,16 +214,25 @@ function CourseCurriculum({ courseId, isPublished }) {
 
     const { _id, ...newVideoDetails } = videoDetails;
     if (isPublished && !isFreePreview) {
-      alert("Alteast one video Should be Free in a publised course");
+      toast({
+        title: "Alteast one video Should be Free in a publised course",
+        variant: "destructive",
+      });
       return;
     }
 
     const data = await updateVideoDetailsService(newVideoDetails, _id);
     if (!data.success) {
-      alert("Unable to Upadate the Course Curriculum");
+      toast({
+        title: "Unable to Upadate the Course Curriculum",
+        variant: "destructive",
+      });
       return;
     }
-    alert("Video Successfully updated");
+    toast({
+      title: "Video Successfuly updated",
+      variant: "success",
+    });
   }
 
   async function handleDelete(e, index) {

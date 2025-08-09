@@ -15,6 +15,7 @@ import NotFoundPage from "./pages/not-found";
 import AddNewCoursePage from "./components/instructor-view/courses/add-new-course/AddNewCoursePage";
 import StudentViewCoursesPage from "./pages/student/courses";
 import StudentViewCourseDetailsPage from "./pages/student/courseDetailsPage";
+import { Toaster } from "./components/ui/toaster";
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -44,7 +45,12 @@ const router = createBrowserRouter(
 );
 
 function App() {
-  return <RouterProvider router={router} />;
+  return (
+    <div>
+      <RouterProvider router={router} />
+      <Toaster />
+    </div>
+  );
 }
 
 export default App;

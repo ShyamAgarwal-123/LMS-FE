@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useCurrentCourse } from "@/customhook/admin-hook";
+import { useToast } from "@/hooks/use-toast";
 import { togglePublishService } from "@/service";
 import { useMediaUploadProgressState } from "@/store/admin";
 import { progress } from "framer-motion";
@@ -30,6 +31,7 @@ function AddNewCoursePage() {
   const { courseId } = useParams();
   const { currentCourseData, setCurrentCourseData, loading } =
     useCurrentCourse(courseId);
+  const { toast } = useToast();
 
   const navigate = useNavigate();
   useEffect(() => {
@@ -76,12 +78,19 @@ function AddNewCoursePage() {
       !currentCourseData.isPublished
     );
     if (data.success) {
+      toast({
+        description: data.message,
+        variant: "success",
+      });
       setCurrentCourseData({
         ...currentCourseData,
         isPublished: !currentCourseData.isPublished,
       });
     } else {
-      alert(`${data.message}`);
+      toast({
+        description: data.message,
+        variant: "destructive",
+      });
     }
   }
 
