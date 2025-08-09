@@ -14,12 +14,12 @@ import { useSideBarActivateTabState } from "@/store/admin";
 const menuItems = [
   { icon: LayoutDashboard, label: "Dashboard", active: true },
   { icon: BookOpen, label: "Courses" },
-  { icon: Users, label: "Students" },
-  { icon: FileText, label: "Assignments" },
-  { icon: MessageSquare, label: "Messages" },
-  { icon: Calendar, label: "Schedule" },
-  { icon: BarChart3, label: "Analytics" },
-  { icon: Settings, label: "Settings" },
+  // { icon: Users, label: "Students" },
+  // { icon: FileText, label: "Assignments" },
+  // { icon: MessageSquare, label: "Messages" },
+  // { icon: Calendar, label: "Schedule" },
+  // { icon: BarChart3, label: "Analytics" },
+  // { icon: Settings, label: "Settings" },
 ];
 
 function Sidebar() {

@@ -4,7 +4,13 @@ import StatsCard from "@/components/stats-card";
 import { useAllAdminCourses } from "@/customhook/admin-hook";
 import { useAllAdminCoursesState } from "@/store/admin";
 import { useUserState } from "@/store/user";
-import { BookOpen, DollarSign, TrendingUp, Users } from "lucide-react";
+import {
+  BookOpen,
+  DollarSign,
+  IndianRupee,
+  TrendingUp,
+  Users,
+} from "lucide-react";
 import { useEffect, useState } from "react";
 
 function AdminDashboardComponent() {
@@ -12,8 +18,18 @@ function AdminDashboardComponent() {
   const [user] = useUserState();
   const { allAdminCoursesState, setAllAdminCoursesState, loading } =
     useAllAdminCourses();
-  // const [course] = useAllAdminCoursesState();
-  // console.log(course);
+  console.log(allAdminCoursesState);
+
+  let totalStudents = 0;
+  let totalRevenue = 0;
+  let activeCourses = 0;
+  allAdminCoursesState.forEach((course) => {
+    totalStudents += course.students;
+    totalRevenue += course.revenue;
+    if (course.isPublished) {
+      activeCourses++;
+    }
+  });
 
   const hr = new Date(date).getHours();
   console.log(hr);
@@ -46,24 +62,24 @@ function AdminDashboardComponent() {
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
         <StatsCard
           title="Total Students"
-          value="1,247"
-          change="+12.5% from last month"
-          changeType="positive"
+          value={totalStudents}
+          // change="+12.5% from last month"
+          // changeType="positive"
           icon={Users}
           gradient
         />
         <StatsCard
-          title="Monthly Revenue"
-          value="$24,680"
-          change="+8.2% from last month"
-          changeType="positive"
-          icon={DollarSign}
+          title="Total Revenue"
+          value={totalRevenue}
+          // change="+8.2% from last month"
+          // changeType="positive"
+          icon={IndianRupee}
         />
         <StatsCard
           title="Active Courses"
-          value="8"
-          change="2 new this month"
-          changeType="neutral"
+          value={activeCourses}
+          // change="2 new this month"
+          // changeType="neutral"
           icon={BookOpen}
         />
         <StatsCard
