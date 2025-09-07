@@ -1,63 +1,89 @@
-import { useSideBarActivateTabState } from "@/store/admin";
-import { BarChart, BookCheckIcon, LogOut } from "lucide-react";
-import LogoComponet from "@/components/logo/WebLogo";
-import Profile from "@/components/logo/ProfileLogo";
+import {
+  LayoutDashboard,
+  BookOpen,
+  SettingsIcon,
+  LogOutIcon,
+  HomeIcon,
+} from "lucide-react";
+import { Button } from "../ui/button";
 
-function SideBar() {
-  const [activeTab, setActiveTab] = useSideBarActivateTabState();
-  const handleLogout = async () => {
-    const data = await logoutService();
-    if (data.success) {
-      setUserState(userDefault);
-      navigate("/auth");
-    }
-  };
+import { useLogout } from "@/customhook/auth-hook";
+import { useNavigate } from "react-router-dom";
+
+const menuItems = [
+  { icon: LayoutDashboard, label: "Dashboard", view: "admin" },
+  { icon: HomeIcon, label: "Home", view: "student" },
+  { icon: BookOpen, label: "Courses" },
+];
+
+function Sidebar({ activeTab, setActiveTab, view }) {
+  const navigate = useNavigate();
+  const handleLogOut = useLogout();
   return (
-    <aside className="sm:border-r-2 border-b-2 sm:min-h-screen sm:h-full md:w-44 bg-white text-black transition-all duration-300 sm:w-12 flex p-2 sm:flex-col justify-between items-center sm:relative fixed left-0 right-0 flex-row">
-      <nav className="flex sm:flex-col flex-row gap-4 mt-1">
-        <button
-          className={`flex gap-2 w-full p-2 rounded-full md:rounded-md ${
-            activeTab === "dashboard" && "bg-slate-200"
-          }`}
-          onClick={() => setActiveTab("dashboard")}
-        >
-          <BarChart />
-          <span
-            className={`md:block hidden ${
-              activeTab === "dashboard" && "font-bold"
-            }`}
-          >
-            Dashboard
-          </span>
-        </button>
-        <button
-          className={`flex gap-2 w-full p-2 rounded-full md:rounded-md ${
-            activeTab === "courses" && "bg-slate-200"
-          }`}
-          onClick={() => setActiveTab("courses")}
-        >
-          <BookCheckIcon className="" />
-          <span
-            className={`md:block hidden ${
-              activeTab === "courses" && "font-bold"
-            }`}
-          >
-            Courses
-          </span>
-        </button>
-      </nav>
-      <div className="mb-1 text-red-500 md:self-start flex sm:flex-col flex-row gap-2 mt-1 font-bold">
-        <button className="flex gap-2 p-2 items-center" onClick={handleLogout}>
-          <Profile />
-          <span className="hidden md:block text-black">Profile</span>
-        </button>
-        <button className="flex gap-2 p-2 items-center" onClick={handleLogout}>
-          <LogOut />
-          <span className="hidden md:block">Logout</span>
-        </button>
+    <div className="p-4 space-y-2 min-h-screen">
+      <div className="mb-6">
+        <h2 className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-3">
+          Main Menu
+        </h2>
+
+        <nav className="space-y-1">
+          {menuItems.map((item) => {
+            if (item.view !== view && item.view !== undefined) return;
+            const Icon = item.icon;
+            return (
+              <Button
+                onClick={() => {
+                  setActiveTab(item.label);
+                  if (view === "student") {
+                    navigate(`/${item.label.toLowerCase()}`);
+                  }
+                }}
+                key={item.label}
+                variant={activeTab == item.label ? "default" : "ghost"}
+                className={`
+                  w-full justify-start gap-3 h-10 font-medium
+                  ${
+                    activeTab == item.label
+                      ? "bg-primary text-primary-foreground shadow-sm"
+                      : "hover:bg-muted text-foreground"
+                  }
+                `}
+              >
+                <Icon className="h-4 w-4" />
+                {item.label}
+              </Button>
+            );
+          })}
+        </nav>
       </div>
-    </aside>
+
+      <div className="border-t border-border pt-4">
+        <div className="space-y-2 text-xs">
+          <Button
+            variant={"ghost"}
+            className={`
+                  w-full justify-start gap-3 h-10 font-medium
+                  
+                `}
+          >
+            <SettingsIcon className="h-4 w-4" />
+            Setting
+          </Button>
+          <Button
+            onClick={handleLogOut}
+            variant={"ghost"}
+            className={`
+                  w-full justify-start gap-3 h-10 font-medium
+                  
+                `}
+          >
+            <LogOutIcon className="h-4 w-4" />
+            Log Out
+          </Button>
+        </div>
+      </div>
+    </div>
   );
 }
 
-export default SideBar;
+export default Sidebar;

@@ -32,7 +32,7 @@ function AdminDashboardComponent() {
   });
 
   const hr = new Date(date).getHours();
-  console.log(hr);
+
   let greetings;
   if (hr > 4 && hr < 12) {
     greetings = "Good morning";

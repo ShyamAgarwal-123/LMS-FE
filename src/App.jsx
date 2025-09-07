@@ -24,11 +24,11 @@ const router = createBrowserRouter(
         <Route path="" element={<StudentHomePage />} />
         <Route path="home" element={<StudentHomePage />} />
         <Route path="courses" element={<StudentViewCoursesPage />} />
-        <Route
-          path="course/details/:courseId"
-          element={<StudentViewCourseDetailsPage />}
-        />
       </Route>
+      <Route
+        path="course/details/:courseId"
+        element={<RouteGuard element={<StudentViewCourseDetailsPage />} />}
+      />
       <Route path="auth" element={<RouteGuard element={<AuthPage />} />} />
       <Route path="admin" element={<RouteGuard element={<AdminPage />} />} />
       <Route

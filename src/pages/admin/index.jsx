@@ -1,21 +1,18 @@
 import { useState } from "react";
-import { Button } from "../../components/ui/button";
-import { Bell, Menu, Search, User, X } from "lucide-react";
-import { Input } from "../../components/ui/input";
-import SideBar from "@/components/sidebar/index2";
-import {
-  useAllAdminCoursesState,
-  useSideBarActivateTabState,
-} from "@/store/admin";
+
+import SideBar from "@/components/sidebar";
+import { useAllAdminCoursesState } from "@/store/admin";
 import { Tabs } from "@/components/ui/tabs";
 import { TabsContent } from "@radix-ui/react-tabs";
 import AdminCourseComponent from "../../components/instructor-view/courses";
 import AdminDashboardComponent from "@/components/instructor-view/dashboard";
 import { useUserState } from "@/store/user";
 import UserProfile from "@/components/user-profile";
-function AdminPage({ children }) {
+
+import Header from "@/components/header";
+function AdminPage() {
   const [sidebarOpen, setSideBarOpen] = useState(false);
-  const [activeTab, setActiveTab] = useSideBarActivateTabState();
+  const [activeTab, setActiveTab] = useState("Dashboard");
   const [user] = useUserState();
   const [courses] = useAllAdminCoursesState();
   const [isProfileOpen, setIsProfileOpen] = useState(false);
@@ -23,63 +20,13 @@ function AdminPage({ children }) {
     <div className="relative min-h-screen bg-background font-primary">
       {isProfileOpen && <UserProfile setState={setIsProfileOpen} />}
       {/* NavBar */}
-      <header className="h-16 bg-card border-b border-border flex items-center justify-between px-4 lg:px-6 shadow-card">
-        <div className="flex items-center gap-4">
-          <Button
-            variant="ghost"
-            size="sm"
-            className="lg:hidden"
-            onClick={() => setSideBarOpen(!sidebarOpen)}
-          >
-            {sidebarOpen ? (
-              <X className="h-5 w-5" />
-            ) : (
-              <Menu className="h-5 w-5" />
-            )}
-          </Button>
-          <div className="flex items-center gap-2">
-            <div className="w-8 h-8 rounded-lg bg-primary flex items-center justify-center">
-              <span className="text-primary-foreground font-bold font-heading text-sm">
-                L
-              </span>
-            </div>
-            <h1 className="text-xl font-heading font-semibold">Laksay</h1>
-          </div>
-        </div>
-
-        <div className="hidden md:flex items-center gap-4 max-w-md flex-1 mx-8">
-          <div className="relative flex-1">
-            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground h-4 w-4" />
-            <Input
-              className="pl-10 bg-muted border-0"
-              placeholder="Search courses, students.."
-            />
-          </div>
-        </div>
-
-        <div className="flex items-center gap-3">
-          <Button variant="ghost" size="sm" className="relative">
-            <Bell className="h-5 w-5" />
-            <span className="absolute -top-1 -right-1 h-3 w-3 bg-primary rounded-full flex items-center justify-center">
-              <span className="text-xs text-primary-foreground">3</span>
-            </span>
-          </Button>
-
-          <Button
-            className="gap-2"
-            variant="ghost"
-            size="sm"
-            onClick={() => setIsProfileOpen(!isProfileOpen)}
-          >
-            <div className="w-7 h-7 bg-primary rounded-full flex items-center justify-center">
-              <User className="h-4 w-4 text-primary-foreground" />
-            </div>
-            <span className="hidden sm:inline text-sm font-medium">
-              {user.user.username}
-            </span>
-          </Button>
-        </div>
-      </header>
+      <Header
+        isProfileOpen={isProfileOpen}
+        setIsProfileOpen={setIsProfileOpen}
+        user={user}
+        sidebarOpen={sidebarOpen}
+        setSideBarOpen={setSideBarOpen}
+      />
 
       <div className="flex">
         {/* sideBar */}
@@ -90,7 +37,11 @@ function AdminPage({ children }) {
           }`}
         >
           <div className="h-16 border-b border-border "></div>
-          <SideBar />
+          <SideBar
+            activeTab={activeTab}
+            setActiveTab={setActiveTab}
+            view={"admin"}
+          />
         </div>
 
         {/* overlay for mobile */}

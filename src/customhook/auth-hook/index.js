@@ -1,4 +1,4 @@
-import { getUserService } from "@/service";
+import { getUserService, logoutService } from "@/service";
 import { userDefault, useUserState } from "@/store/user";
 import { useEffect, useState } from "react";
 
@@ -47,4 +47,19 @@ export const useCheckAuthUser = () => {
   }, []);
 
   return { userState, loading };
+};
+
+export const useLogout = () => {
+  const [user, setUser] = useUserState();
+  const handleLogOut = async () => {
+    const data = await logoutService();
+    if (data.success) {
+      setUser(userDefault);
+      alert("Successfully Logout");
+    } else {
+      alert("unable to Logout");
+    }
+  };
+
+  return handleLogOut;
 };

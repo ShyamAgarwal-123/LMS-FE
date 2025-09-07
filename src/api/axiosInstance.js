@@ -2,7 +2,7 @@ import { refreshAccessToken } from "@/service";
 import axios from "axios";
 
 export const axiosInstanceWithAuth = axios.create({
-  baseURL: "http://localhost:3030/api/v1",
+  baseURL: meta.process.VITE_CLIENT_BASE_URL,
   withCredentials: true,
 });
 

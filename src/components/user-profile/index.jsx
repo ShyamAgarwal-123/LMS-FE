@@ -1,20 +1,10 @@
-import { logoutService } from "@/service";
-import { userDefault, useUserState } from "@/store/user";
 import { Card } from "../ui/card";
 import { Button } from "../ui/button";
 import { X } from "lucide-react";
+import { useLogout } from "@/customhook/auth-hook";
 
 function UserProfile({ setState }) {
-  const [user, setUser] = useUserState();
-  const handleLogOut = async () => {
-    const data = await logoutService();
-    if (data.success) {
-      setUser(userDefault);
-      alert("Successfully Logout");
-    } else {
-      alert("unable to Logout");
-    }
-  };
+  const handleLogOut = useLogout();
 
   return (
     <Card className="absolute top-16 right-8 p-3 flex-col justify-center items-center z-50 space-y-2">

@@ -269,6 +269,21 @@ export const getAllStudentViewCoursesService = async (query) => {
   }
 };
 
+export const getStudentAllPurchsedCourseService = async () => {
+  try {
+    const { data } = await axiosInstanceWithAuth.get(
+      `/course/purchasedCourses`
+    );
+    return data;
+  } catch (error) {
+    const data = error?.response?.data;
+    if (data) {
+      return data;
+    }
+    return error;
+  }
+};
+
 export const getUploadPreSignedURLSevice = async (file, folder) => {
   try {
     const { data } = await axiosInstanceWithAuth.get(
@@ -377,6 +392,39 @@ export const getPublicS3ObjectUrlService = async (key) => {
   try {
     const { data } = await axiosInstanceWithAuth.get(
       `s3/public-url?key=${encodeURIComponent(key)}`
+    );
+    return data;
+  } catch (error) {
+    const data = error?.response?.data;
+    if (data) {
+      return data;
+    }
+    return error;
+  }
+};
+
+// payment related services
+
+export const createPaymentOrder = async (courseId) => {
+  try {
+    const { data } = await axiosInstanceWithAuth.post("/payment/create-order", {
+      courseId,
+    });
+    return data;
+  } catch (error) {
+    const data = error?.response?.data;
+    if (data) {
+      return data;
+    }
+    return error;
+  }
+};
+
+export const verifyPayment = async (payload) => {
+  try {
+    const { data } = await axiosInstanceWithAuth.post(
+      "/payment/verify",
+      payload
     );
     return data;
   } catch (error) {
